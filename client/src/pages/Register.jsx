@@ -22,12 +22,12 @@ export default function Register() {
                 body: JSON.stringify({ email, password, role}),
                 credentials: 'include'
             })
-            navigate('/login')
             if (!response.ok) {
                 throw new Error("Erreur lors de l'inscription")
             }
             const data = await response.json()
             console.log(data)
+            navigate('/login')
         } catch (err) {
             console.log(err)
             setError(err.message || "Une erreur es survenue")

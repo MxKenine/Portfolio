@@ -2,7 +2,7 @@ const User = require('../models/user.model')
 const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 
 router.post('/register', async (req, res) => {
     try {
@@ -16,10 +16,11 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: "Cet email existe déjà" })
         }
         const hash = await bcrypt.hash(password, 10)
-        await User.create({ email, password: hash,  role:"user"})
+        const token = crypto.randomBytes(32).toString('hex')
+        await User.create({ email, password: hash,  role:"user", token})
         res.status(201).json({ message: "L'utilisateur a été ajouté" })
     } catch (err) {
-        res.status(400).json({ message: err })
+        res.status(400).json({ message: err.message })
     }
 })
 
@@ -37,14 +38,6 @@ router.post('/login', async (req, res) => {
     if (!isMatch) {
         return res.status(400).json({ message: "Identifiants invalides mdp" })
     }
-    const token = jwt.sign(
-        {
-            id: user._id,
-            username: user.username
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: "2h" }
-    )
     res.json(isMatch)
 })
 
