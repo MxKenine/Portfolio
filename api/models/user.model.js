@@ -1,5 +1,5 @@
 // Importer le module mongoose
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 // Définir le schéma
 const userSchema = new mongoose.Schema({
@@ -19,4 +19,4 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema)
 
 // Exporter User pour l'utiliser dans d'autres fichiers
-module.exports = User
+export default User

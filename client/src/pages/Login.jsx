@@ -27,7 +27,7 @@ export default function Login() {
                 throw new Error('Identifiants incorrects')
             }
             const data = await response.json()
-            
+            console.log(data)
             if (data.role === 'admin') {
                 navigate('/admin')
             } else {

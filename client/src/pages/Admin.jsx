@@ -6,18 +6,15 @@ export default function Admin() {
     const navigate = useNavigate()
     async function getAdminData() {
         try {
-            const token = localStorage.getItem('token')
             const response = await fetch('http://localhost:3000/admin', {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
                 credentials: "include"
             })
             if (!response.ok) {
                 throw new Error('Accès refusé')
             }
             const data = await response.json()
+            console.log(data) 
             setUsers(data.users)
 
         } catch (err) {
