@@ -1,15 +1,19 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 
-const BASE_URL = "http://localhost:3000/login-cookie";
+const BASE_URL = "http://localhost:3000/login";
+
 export default function Login() {
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
 
     async function handleSubmit(e) {
         e.preventDefault()
-        navigate('/dashboard')
+        setError("")
+        setLoading(true)
         try {
             const response = await fetch(BASE_URL, {
                 method: 'POST',
@@ -20,21 +24,20 @@ export default function Login() {
                 credentials: "include"
             })
             if (!response.ok) {
-                throw new Error('Forbiden')
+                throw new Error('Identifiants incorrects')
             }
             const data = await response.json()
-            localStorage.setItem('role', data.role)
-            localStorage.setItem('image', data.image)
-            localStorage.setItem('token', data.token)
+            
             if (data.role === 'admin') {
                 navigate('/admin')
-            }
-            if (data.role === 'user') {
+            } else {
                 navigate('/accueil')
             }
-        } catch (err) {
-            console.log(err)
-        }
+            } catch (err) {
+                setError(err.message || "Une erreur est survenue")
+            } finally {
+                setLoading(false)
+            }
     }
     return (
         <main>
@@ -57,14 +60,21 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="input input-accent w-full"/>
 
+                {error && (
+                <p className="text-red-300 text-sm">{error}</p>
+                )}
+
                 <button
-                className="bg-emerald-950 flex justify-center p-2 hover:cursor-pointer">
-                Connexion
+                disabled={loading}
+                className="bg-emerald-950 flex justify-center p-2 hover:cursor-pointer disabled:opacity-50"
+                >
+                {loading ? "Connexion..." : "Connexion"}
                 </button>
 
                 <Link
                 to='/register'
-                className="bg-emerald-950 flex justify-center p-2 hover:cursor-pointer">
+                className="bg-emerald-950 flex justify-center p-2 hover:cursor-pointer"
+                >
                 Inscription
                 </Link>
 

@@ -28,12 +28,11 @@ export default function Admin() {
     useEffect(() => {
         getAdminData()
     }, [])
-    const image = localStorage.getItem('image')
+    
     return (
         <>
             <div>Vous êtes administrateur</div>
-            <img src={image} alt="" />
-            {users.map(user => <h2 key={user._id}>{user.username}</h2>)}
+            {users.map(user => <h2 key={user._id}>{user.email}</h2>)}
         </>
     )
 }

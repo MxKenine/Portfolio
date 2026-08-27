@@ -1,7 +1,5 @@
 export default function verfyToken(req, res, next) {
     try {
-        // const authHeaders = req.headers.authorization
-        // const token = authHeaders.split(' ')[1]
         const token = req.cookies.token
         console.log(token)
         if (!token) {

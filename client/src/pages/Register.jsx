@@ -1,31 +1,28 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
-    const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [role, setRole] = useState("")
-    const [image, setImage] = useState(null)
+    const [role, setRole] = useState("user")
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     async function handleSubmit(e) {
         e.preventDefault()
+        setError("")
+        setLoading(true)
         try {
-            const formData = new FormData()
-            formData.append('username', username)
-            formData.append('email', email)
-            formData.append('password', password)
-            formData.append('role', role)
-            formData.append('image', image)
-
             const response = await fetch('http://localhost:3000/register', {
                 method: 'POST',
-                // headers: {
-                //     'Content-Type': 'application/json'
-                // },
-                body: formData,
-                // credentials: 'include'
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password, role}),
+                credentials: 'include'
             })
+            navigate('/login')
             if (!response.ok) {
                 throw new Error("Erreur lors de l'inscription")
             }
@@ -33,46 +30,40 @@ export default function Register() {
             console.log(data)
         } catch (err) {
             console.log(err)
+            setError(err.message || "Une erreur es survenue")
+        } finally {
+            setLoading(false)
         }
     }
-    return (
+    return (    
         <main>
             <div className="h-screen justify-center items-center flex">
+
             <form
-            onSubmit={handleSubmit}
-            className="w-150 p-5 flex flex-col gap-5 bg-emerald-800">
+                onSubmit={handleSubmit}
+                className="w-150 p-5 flex flex-col gap-5 bg-emerald-800">
+
                 <input
-                type="text"
-                placeholder='Username...'
-                onChange={(e) => setUsername(e.target.value)} />
+                    type="email"
+                    placeholder='Email...'
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="input input-accent w-full"/>
+
                 <input
-                type="email"
-                placeholder='Email...'
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="input input-accent w-full"/>
-                <input
-                type="Password"
-                placeholder='Password...'
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="input input-accent w-full"/>
-                <select
-                name="" id=""
-                onChange={(e) => setRole(e.target.value)}>
-                    <option defaultValue={""}>Choisir un rôle...</option>
-                    <option value="user">Utilisateur</option>
-                    <option value="admin">Administrateur</option>
-                </select>
-                <input
-                type="file" accept="image/*"
-                onChange={(e) => setImage(e.target.files[0])} />
+                    type="password"
+                    placeholder='Password...'
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="input input-accent w-full"/>
+
                 <button
-                className="bg-emerald-950 flex justify-center p-2 hover:cursor-pointer"
-                >S'inscrire</button>
-                <Link to='/login'>Se connecter</Link>
+                className="bg-emerald-950 flex justify-center p-2 hover:cursor-pointer">
+                S'inscrire
+                </button>
+
             </form>
-                </div>
+            </div>
         </main>
     )
 }
