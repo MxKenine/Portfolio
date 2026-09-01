@@ -23,7 +23,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<UserNavbar />}>
-          <Route path='/accueil' element={<Home />}/>
+          <Route path='' element={<Home />}/>
           <Route path='/register' element={<Register />}/>
           <Route path='/login' element={<Login />}/>
         </Route>
