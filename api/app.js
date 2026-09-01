@@ -22,7 +22,7 @@ app.use('', authRoute)
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log("Connexion établie avec succès !")
-        app.listen(BACK_URL, () => console.log(`Le serveur tourne sur le port : ${PORT}`))
+        app.listen(BACK_URL, () => console.log(`Le serveur tourne sur le port : ${BACK_URL}`))
     })
     .catch(err => {
         console.log(err)
