@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 
 const app = express()
 
-const BACK_URL = process.env.PORT || 3000 
+const BACK_URL = process.env.BACK_URL || 3000 
 
 app.use(cors({
     origin:process.env.FRONT_URL,
@@ -22,7 +22,7 @@ app.use('', authRoute)
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log("Connexion établie avec succès !")
-        app.listen(PORT, () => console.log(`Le serveur tourne sur le port : ${PORT}`))
+        app.listen(BACK_URL, () => console.log(`Le serveur tourne sur le port : ${PORT}`))
     })
     .catch(err => {
         console.log(err)
