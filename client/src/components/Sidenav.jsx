@@ -9,7 +9,7 @@ export default function AdminSideNav() {
                 <Link to="/admin/edit-profil">Profil</Link>
                 <Link to="/login">Login</Link>
                 <Link to="/register">Register</Link>
-                <Link to="/accueil">Accueil</Link>
+                <Link to="">Accueil</Link>
             </aside>
             <main className="flex-1 p-5 overflow-y-auto">
                 <Outlet />

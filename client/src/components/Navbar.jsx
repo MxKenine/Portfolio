@@ -5,7 +5,7 @@ export default function Navbar() {
     <nav className='flex justify-end'>
     <ul className='flex justify-around w-5/6 pt-4'>
     <li>
-        <Link to="/accueil">Accueil</Link>
+        <Link to="">Accueil</Link>
     </li>
     <li>
         <Link to="/register">Register</Link>
