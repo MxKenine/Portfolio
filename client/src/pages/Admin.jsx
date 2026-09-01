@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import AdminSideNav from '../components/Sidenav'
 
 export default function Admin() {
     const [users, setUsers] = useState([])
@@ -30,7 +29,16 @@ export default function Admin() {
     return (
         <>
             <div>Vous êtes administrateur</div>
-            {users.map(user => <h2 key={user._id}>{user.email}</h2>)}
+            {users.map(user =>
+            <div key={user._id}>
+            <p>Prénom : {user.firstname || "Non renseigné"}</p>
+            <p>Nom : {user.lastname || "Non renseigné"}</p>
+            <p>Email : {user.email}</p>
+            <p>Téléphone : {user.phone || "Non renseigné"}</p>
+            <p>Lieux : {user.where || "Non renseigné"}</p>
+            <p>Avatar : {user.avatar || "Non renseigné"}</p>
+            </div>
+            )}
         </>
     )
 }

@@ -5,6 +5,7 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import Admin from './pages/Admin'
 import AdminSideNav from './components/Sidenav'
+import Editprofil from './components/Editprofil'
 
 export function UserNavbar() {
     return (
@@ -29,6 +30,7 @@ export default function App() {
 
         <Route path="/admin" element={<AdminSideNav />}>
           <Route path='/admin' element={<Admin />}/>
+          <Route path='/admin/edit-profil' element={<Editprofil />}/>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -71,4 +71,13 @@ router.get('/admin', verifyToken, verifyRole('admin'), async (req, res) => {
     }
 })
 
+router.patch('/admin/edit-profil', verifyToken, verifyRole('admin'), async (req, res) => {
+    try {
+        const users = await User.find({}, '-password')
+        res.json({ message: "Bienvenue admin", users })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+})
+
 export default router
