@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:3000/admin`,
+        `${BACK_URL}/admin`,
         {
           method: "PATCH",
           credentials: "include",
@@ -35,7 +35,7 @@ import { useNavigate } from 'react-router-dom'
 
     async function getAdminData() {
         try {
-            const response = await fetch('http://localhost:3000/admin', {
+            const response = await fetch('${BACK_URL}/admin', {
                 method: 'GET',
                 credentials: "include"
             })
@@ -53,7 +53,7 @@ import { useNavigate } from 'react-router-dom'
     }
     async function getUser() {
         try {
-            const response = await fetch ('http://localhost:3000/admin/edit-profil', {
+            const response = await fetch ('${BACK_URL}/admin/edit-profil', {
                 method: 'PATCH',
                 credentials: "include"
             })
