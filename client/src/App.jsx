@@ -5,7 +5,7 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import Admin from './pages/Admin'
 import AdminSideNav from './components/Sidenav'
-import Editprofil from './components/Editprofil'
+import VerifyEmail from './pages/VerifyEmail'
 
 export function UserNavbar() {
     return (
@@ -26,11 +26,11 @@ export default function App() {
           <Route path='' element={<Home />}/>
           <Route path='/register' element={<Register />}/>
           <Route path='/login' element={<Login />}/>
+          <Route path='/verify-email' element={<VerifyEmail />}/>
         </Route>
 
         <Route path="/admin" element={<AdminSideNav />}>
           <Route path='/admin' element={<Admin />}/>
-          <Route path='/admin/edit-profil' element={<Editprofil />}/>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 
 const app = express()
 
-const BACK_URL = process.env.BACK_URL || 3000 
+const BACK_URL = process.env.VITE_BACK_URL || 3000 
 
 app.use(cors({
     origin:process.env.FRONT_URL,

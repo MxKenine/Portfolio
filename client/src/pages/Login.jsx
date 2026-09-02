@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 
-const BASE_URL = "http://localhost:3000/login";
+const BACK_URL = import.meta.env.VITE_BACK_URL;
+console.log('BACK_URL Login:', BACK_URL)
 
 export default function Login() {
     const navigate = useNavigate()
@@ -15,7 +16,7 @@ export default function Login() {
         setError("")
         setLoading(true)
         try {
-            const response = await fetch(BASE_URL, {
+            const response = await fetch(`${BACK_URL}/login`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
