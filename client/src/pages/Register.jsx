@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [phone, setPhone] = useState("");
   const [where, setWhere] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -17,8 +17,6 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const BACK_URL = import.meta.env.VITE_BACK_URL;
-
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -27,15 +25,14 @@ export default function Register() {
       const formData = new FormData();
       formData.append("email", email);
       formData.append("password", password);
-      formData.append("firstName", firstName);
-      formData.append("lastName", lastName);
+      formData.append("firstname", firstname);
+      formData.append("lastname", lastname);
       formData.append("phone", phone);
-      formData.append("avatar", avatar);
       formData.append("age", age);
       formData.append("where", where);
       formData.append("role", role);
 
-      const response = await fetch(`${BACK_URL}/register`, {
+      const response = await fetch(`http://localhost:3000/register`, {
         method: "POST",
         body: formData,
       });
@@ -77,7 +74,7 @@ export default function Register() {
           <input
             type="text"
             placeholder="Prénom..."
-            onChange={(e) => setFirstName(e.target.value)}
+            onChange={(e) => setFirstname(e.target.value)}
             required
             className="input input-accent w-full"
           />
@@ -85,7 +82,7 @@ export default function Register() {
           <input
             type="text"
             placeholder="Nom..."
-            onChange={(e) => setLastName(e.target.value)}
+            onChange={(e) => setLastname(e.target.value)}
             required
             className="input input-accent w-full"
           />

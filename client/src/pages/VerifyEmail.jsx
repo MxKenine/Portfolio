@@ -7,7 +7,7 @@ export default function VerifyEmail() {
     const [message, setMessage] = useState('')
 
     async function validateEmail() {
-        const response = await fetch(`${import.meta.env.VITE_BACK_URL}/verify-email?token=${token}`)
+        const response = await fetch(`http://localhost:3000/verify-email?token=${token}`)
         const data = await response.json()
         setMessage(data.message)
     }

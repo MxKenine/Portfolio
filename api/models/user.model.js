@@ -24,10 +24,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    firstName: {
+    firstname: {
         type: String
     },
-    lastName: {
+    lastname: {
         type: String
     },
     avatar: {

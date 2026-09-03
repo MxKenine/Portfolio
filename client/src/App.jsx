@@ -6,6 +6,9 @@ import Login from './pages/Login'
 import Admin from './pages/Admin'
 import AdminSideNav from './components/Sidenav'
 import VerifyEmail from './pages/VerifyEmail'
+import EditProfil from './pages/Editprofil'
+import Hotpot from './pages/Hotpot'
+import Contact from './pages/Contact'
 
 export function UserNavbar() {
     return (
@@ -27,10 +30,13 @@ export default function App() {
           <Route path='/register' element={<Register />}/>
           <Route path='/login' element={<Login />}/>
           <Route path='/verify-email' element={<VerifyEmail />}/>
+          <Route path='/hotpot' element={<Hotpot />}/>
+          <Route path='/contact' element={<Contact />}/>
         </Route>
 
         <Route path="/admin" element={<AdminSideNav />}>
           <Route path='/admin' element={<Admin />}/>
+          <Route path='/admin/edit-profil' element={<EditProfil />}/>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 
-const BACK_URL = import.meta.env.VITE_BACK_URL;
-console.log('BACK_URL Login:', BACK_URL)
 
 export default function Login() {
     const navigate = useNavigate()
@@ -11,12 +9,13 @@ export default function Login() {
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
+
     async function handleSubmit(e) {
         e.preventDefault()
         setError("")
         setLoading(true)
         try {
-            const response = await fetch(`${BACK_URL}/login`, {
+            const response = await fetch(`http://localhost:3000/login`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -32,7 +31,7 @@ export default function Login() {
             if (data.role === 'admin') {
                 navigate('/admin')
             } else {
-                navigate('/accueil')
+                navigate('')
             }
             } catch (err) {
                 setError(err.message || "Une erreur est survenue")
