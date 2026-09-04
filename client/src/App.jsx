@@ -9,12 +9,17 @@ import VerifyEmail from './pages/VerifyEmail'
 import EditProfil from './pages/Editprofil'
 import Hotpot from './pages/Hotpot'
 import Contact from './pages/Contact'
+import Footer from './components/Footer'
+import Projets from './pages/Projets'
+import ProjetDetail from './pages/ProjetDetail'
+
 
 export function UserNavbar() {
     return (
         <>
             <Navbar />
             <Outlet />
+            <Footer />
         </>
     )
 }
@@ -32,6 +37,8 @@ export default function App() {
           <Route path='/verify-email' element={<VerifyEmail />}/>
           <Route path='/hotpot' element={<Hotpot />}/>
           <Route path='/contact' element={<Contact />}/>
+          <Route path='/projets' element={<Projets />}/>
+          <Route path="/projets/:projetId" element={<ProjetDetail />} />
         </Route>
 
         <Route path="/admin" element={<AdminSideNav />}>

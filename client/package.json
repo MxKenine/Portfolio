@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@icons-pack/react-simple-icons": "^13.15.1",
     "@tailwindcss/vite": "^4.3.3",
     "daisyui": "^5.7.17",
+    "lucide-react": "^0.548.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2",

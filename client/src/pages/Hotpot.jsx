@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import { Briefcase, Award, Languages as LanguagesIcon, Mail, Phone, MapPin, Link as LinkIcon } from 'lucide-react'
+import Navbar from '../components/Navbar'
 
 export default function Hotpot() {
-    const [users, setUsers] = useState([])
-    const [cvs, setCvs] = useState([])
-    const [revealed, setRevealed] = useState({})
-    const [loadingId, setLoadingId] = useState(null)
+    const [user, setUser] = useState(null)
+    const [cv, setCv] = useState(null)
+    const [revealed, setRevealed] = useState(null)
+    const [loadingContact, setLoadingContact] = useState(false)
+    const [error, setError] = useState(null)
 
     async function getData() {
         try {
@@ -17,10 +20,10 @@ export default function Hotpot() {
             const usersData = await usersRes.json()
             const cvsData = await cvsRes.json()
 
-            setUsers(usersData.users)
-            setCvs(cvsData.cvs)
+            setUser(usersData.users[0] || null)
+            setCv(cvsData.cvs[0] || null)
         } catch (err) {
-            console.log(err)
+            setError(err.message)
         }
     }
 
@@ -28,98 +31,187 @@ export default function Hotpot() {
         getData()
     }, [])
 
-    async function revealContact(userId) {
-        setLoadingId(userId)
+    async function revealContact() {
+        if (!user) return
+        setLoadingContact(true)
         try {
-            const response = await fetch(`http://localhost:3000/members/${userId}/contact`)
+            const response = await fetch(`http://localhost:3000/members/${user._id}/contact`)
             if (!response.ok) throw new Error('Impossible de récupérer les coordonnées')
             const data = await response.json()
-            setRevealed({ ...revealed, [userId]: data })
+            setRevealed(data)
         } catch (err) {
             console.log(err)
         } finally {
-            setLoadingId(null)
+            setLoadingContact(false)
         }
     }
 
-    function getCvForUser(userId) {
-        return cvs.find(cv => cv.user === userId)
+    if (error) {
+        return <p className="text-center text-red-500 py-20">{error}</p>
+    }
+
+    if (!user) {
+        return <p className="text-center text-gray-500 py-20">Chargement...</p>
     }
 
     return (
-        <>
-            <div>Hotpot</div>
-            {users.map(user => {
-                const cv = getCvForUser(user._id)
+        <div data-theme="light" className="min-h-screen bg-white">
+ 
 
-                return (
-                    <div key={user._id} style={{ border: '1px solid #ddd', padding: '10px', margin: '8px 0' }}>
-                        <p>Prénom : {user.firstname || "Non renseigné"}</p>
-                        <p>Nom : {user.lastname || "Non renseigné"}</p>
-                        <p>Lieux : {user.where || "Non renseigné"}</p>
-                        <p>Avatar : {user.avatar || "Non renseigné"}</p>
+            <div className="max-w-5xl mx-auto px-6 py-10">
+                <div className="border border-blue-300 rounded-lg overflow-hidden">
 
-                        {revealed[user._id] ? (
-                            <>
-                                <p>Email : {revealed[user._id].email}</p>
-                                <p>Téléphone : {revealed[user._id].phone || "Non renseigné"}</p>
-                            </>
-                        ) : (
-                            <button onClick={() => revealContact(user._id)} disabled={loadingId === user._id}>
-                                {loadingId === user._id ? "Chargement..." : "Afficher les coordonnées"}
-                            </button>
-                        )}
+                    {/* Bandeau profil */}
+                    <div className="bg-gray-200 px-8 py-8 flex flex-col md:flex-row gap-6 items-start md:items-center">
+                        <img
+                            src={user.avatar || '/default-avatar.png'}
+                            alt={`${user.firstname} ${user.lastname}`}
+                            className="w-28 h-28 rounded-full object-cover shrink-0"
+                        />
 
-                        {cv && (
-                            <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid #eee' }}>
-                                <h4>{cv.title}</h4>
+                        <div className="flex-1">
+                            <h1 className="text-3xl font-bold text-gray-900">
+                                {user.firstname} {user.lastname}
+                            </h1>
+                            {cv?.title && (
+                                <p className="mt-1 text-lg text-gray-800">{cv.title}</p>
+                            )}
 
-                                {cv.links?.length > 0 && (
-                                    <p>
-                                        Liens :{' '}
-                                        {cv.links.map((link, i) => (
-                                            <a key={i} href={link} target="_blank" rel="noreferrer" style={{ marginRight: '8px' }}>
-                                                {link}
-                                            </a>
-                                        ))}
-                                    </p>
+                            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-700">
+                                {revealed ? (
+                                    <>
+                                        <span className="flex items-center gap-1.5">
+                                            <Mail size={14} /> {revealed.email}
+                                        </span>
+                                        {revealed.phone && (
+                                            <span className="flex items-center gap-1.5">
+                                                <Phone size={14} /> {revealed.phone}
+                                            </span>
+                                        )}
+                                    </>
+                                ) : (
+                                    <button
+                                        onClick={revealContact}
+                                        disabled={loadingContact}
+                                        className="text-emerald-700 underline text-sm"
+                                    >
+                                        {loadingContact ? "Chargement..." : "Afficher les coordonnées"}
+                                    </button>
                                 )}
 
-                                {cv.experiences?.length > 0 && (
-                                    <>
-                                        <p><strong>Expériences</strong></p>
-                                        {cv.experiences.map((exp, i) => (
-                                            <div key={i} style={{ marginBottom: '6px' }}>
-                                                <p>{exp.title} — {exp.company} ({exp.startDate} - {exp.endDate})</p>
-                                                <p>{exp.description}</p>
-                                                {exp.tags?.length > 0 && <p>{exp.tags.join(', ')}</p>}
+                                {user.where && (
+                                    <span className="flex items-center gap-1.5">
+                                        <MapPin size={14} /> {user.where}
+                                    </span>
+                                )}
+
+                                {cv?.links?.map((link, i) => (
+                                    <a key={i} href={link} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 underline">
+                                        <LinkIcon size={14} /> {link.replace(/^https?:\/\//, '')}
+                                    </a>
+                                ))}
+                            </div>
+
+                            <a
+                                href="/contact"
+                                className="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-none mt-4"
+                            >
+                                Contactez-moi
+                            </a>
+                        </div>
+                    </div>
+
+                    {!cv ? (
+                        <p className="text-center text-gray-400 text-sm py-8">
+                            Aucun CV renseigné pour le moment.
+                        </p>
+                    ) : (
+                        <div className="grid md:grid-cols-3">
+
+                            {/* Expériences */}
+                            <div className="md:col-span-2 px-8 py-6 border-t border-blue-200">
+                                <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5">
+                                    <Briefcase size={18} /> Expériences
+                                </h2>
+
+                                <div className="space-y-6">
+                                    {cv.experiences?.map((exp, i) => (
+                                        <div key={i}>
+                                            <div className="flex items-start justify-between gap-3">
+                                                <h3 className="font-semibold text-gray-900">{exp.title}</h3>
+                                                <span className="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1 whitespace-nowrap">
+                                                    {exp.startDate} - {exp.endDate}
+                                                </span>
+                                            </div>
+                                            <p className="text-sm text-gray-600 mt-0.5">{exp.company}</p>
+                                            <p className="text-sm text-gray-700 mt-2 leading-relaxed">{exp.description}</p>
+
+                                            {exp.tags?.length > 0 && (
+                                                <div className="flex flex-wrap gap-2 mt-3">
+                                                    {exp.tags.map((tag, j) => (
+                                                        <span key={j} className="text-xs bg-gray-100 text-gray-700 rounded px-2 py-1">
+                                                            {tag}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Compétences + Langues */}
+                            <div className="border-t md:border-t-0 md:border-l border-blue-200 bg-gray-50">
+
+                                <div className="px-6 py-6">
+                                    <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5">
+                                        <Award size={18} /> Compétences
+                                    </h2>
+
+                                    <div className="space-y-4">
+                                        {cv.skills?.map((skill, i) => (
+                                            <div key={i}>
+                                                <p className="text-sm text-gray-800 mb-1">{skill.name}</p>
+                                                <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-emerald-500 rounded-full"
+                                                        style={{ width: `${skill.level}%` }}
+                                                    />
+                                                </div>
                                             </div>
                                         ))}
-                                    </>
-                                )}
+                                    </div>
+                                </div>
 
-                                {cv.skills?.length > 0 && (
-                                    <>
-                                        <p><strong>Compétences</strong></p>
-                                        {cv.skills.map((skill, i) => (
-                                            <p key={i}>{skill.name} — {skill.level}%</p>
-                                        ))}
-                                    </>
-                                )}
+                                <div className="px-6 py-6 border-t border-gray-200">
+                                    <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5">
+                                        <LanguagesIcon size={18} /> Langues
+                                    </h2>
 
-                                {cv.languages?.length > 0 && (
-                                    <>
-                                        <p><strong>Langues</strong></p>
-                                        {cv.languages.map((lang, i) => (
-                                            <p key={i}>{lang.name} {lang.label && `(${lang.label})`} — {lang.level}/3</p>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {cv.languages?.map((lang, i) => (
+                                            <div key={i} className="bg-white rounded-md p-3">
+                                                <p className="text-sm font-medium text-gray-900">{lang.name}</p>
+                                                {lang.label && (
+                                                    <p className="text-xs text-gray-500 mt-0.5">{lang.label}</p>
+                                                )}
+                                                <div className="flex gap-1 mt-2">
+                                                    {[0, 1, 2].map(dot => (
+                                                        <span
+                                                            key={dot}
+                                                            className={`w-2 h-2 rounded-full ${dot < lang.level ? 'bg-emerald-500' : 'bg-gray-300'}`}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
                                         ))}
-                                    </>
-                                )}
+                                    </div>
+                                </div>
                             </div>
-                        )}
-                    </div>
-                )
-            })}
-        </>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
     )
 }

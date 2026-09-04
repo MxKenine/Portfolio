@@ -9,6 +9,7 @@ import User from "../models/user.model.js";
 import CV from "../models/cv.model.js"
 import { verifyToken, verifyRole } from "../middleware/verifyToken.js";
 import sendConfirmationEmail from "../middleware/sendConfirmationEmail.js";
+import Projet from "../models/projet.model.js";
 
 const router = express.Router();
 
@@ -231,6 +232,35 @@ router.get("/cvs", async (req, res) => {
   try {
     const cvs = await CV.find({}); // tout est public ici, pas de champ sensible dans le CV
     res.json({ cvs });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.get("/members/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id, "firstname lastname avatar");
+    if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
+    res.json({ user });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.get("/projets", async (req, res) => {
+  try {
+    const projets = await Projet.find({});
+    res.json({ projets });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.get("/projets/:id", async (req, res) => {
+  try {
+    const projet = await Projet.findById(req.params.id);
+    if (!projet) return res.status(404).json({ message: "Projet introuvable" });
+    res.json({ projet });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
