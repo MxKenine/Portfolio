@@ -57,17 +57,10 @@ export default function Register() {
   }
 
   return (
-    <div data-theme="light" className="min-h-screen bg-white flex flex-col">
-
-      {/* Header */}
-      <header className="px-6 md:px-12 py-6">
-        <span className="text-xl font-semibold text-gray-900">KenineCorp</span>
-      </header>
-
+    <div data-theme="light" className="h-full bg-white flex flex-col">
       {/* Formulaire centré */}
       <main className="flex-1 flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md bg-gray-100 rounded-lg p-10">
-
           <div className="flex flex-col items-center mb-8">
             <span className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-500 text-white mb-3">
               <ShieldCheck size={22} />
@@ -132,7 +125,9 @@ export default function Register() {
 
             <div className="form-control">
               <label className="label pb-1">
-                <span className="label-text text-gray-600">Numéro de téléphone</span>
+                <span className="label-text text-gray-600">
+                  Numéro de téléphone
+                </span>
               </label>
               <input
                 type="text"

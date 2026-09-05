@@ -9,7 +9,7 @@ export default function Footer() {
       </span>
       <div className="flex items-center gap-6">
         <a
-          href="https://github.com"
+          href="https://github.com/MxKenine"
           target="_blank"
           rel="noreferrer"
           className="flex items-center gap-1.5 hover:text-emerald-600"
@@ -17,7 +17,7 @@ export default function Footer() {
           <Github size={16} /> GitHub
         </a>
         <a
-          href="https://linkedin.com"
+          href="https://www.linkedin.com/in/quentin-duprey-1317213bb/"
           target="_blank"
           rel="noreferrer"
           className="flex items-center gap-1.5 hover:text-emerald-600"
