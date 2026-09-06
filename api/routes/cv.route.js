@@ -1,6 +1,7 @@
 import express from "express";
 
 import CV from "../models/cv.model.js";
+import User from "../models/user.model.js";
 import { verifyToken, verifyRole } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -30,24 +31,22 @@ router.patch("/cv/me", verifyToken, verifyRole("admin"), async (req, res) => {
   }
 });
 
-// GET /cvs → liste publique de tous les CV
-router.get("/cvs", async (req, res) => {
+// GET /cv/public → CV public de l'unique admin du site, enrichi des infos de profil
+// (il n'y a qu'un seul utilisateur/CV possible, donc pas besoin de :userId)
+router.get("/cv/public", async (req, res) => {
   try {
-    const cvs = await CV.find({});
-    res.json({ cvs });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+    // On retrouve l'admin (unique) plutôt que de dépendre d'un id dans l'URL
+    const admin = await User.findOne({ role: "admin" });
+    if (!admin) {
+      return res.status(404).json({ message: "Administrateur introuvable" });
+    }
 
-// GET /cv/public/:userId → CV public d'un utilisateur, enrichi des infos de profil
-router.get("/cv/public/:userId", async (req, res) => {
-  try {
-    const cv = await CV.findOne({ user: req.params.userId }).populate(
+    const cv = await CV.findOne({ user: admin._id }).populate(
       "user",
       "firstname lastname email phone where avatar"
     );
     if (!cv) return res.status(404).json({ message: "CV introuvable" });
+
     res.json({ cv });
   } catch (err) {
     res.status(500).json({ message: err.message });

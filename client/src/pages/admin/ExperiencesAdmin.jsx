@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EditCv from "./EditCV";
+import EditCv from "../../components/admin/EditCV";
 
 export default function ExperiencesAdmin() {
   const [cv, setCv] = useState(null);

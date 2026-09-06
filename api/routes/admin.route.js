@@ -20,35 +20,6 @@ router.get("/admin", verifyToken, verifyRole("admin"), async (req, res) => {
   }
 });
 
-// PATCH /admin/edit-profil/:id → modifie un utilisateur par son id
-// (route historique, à conserver uniquement si un usage la nécessite encore ;
-// sinon /admin/profil ci-dessous suffit puisqu'il n'y a qu'un seul admin)
-router.patch(
-  "/admin/edit-profil/:id",
-  verifyToken,
-  verifyRole("admin"),
-  async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { firstname, lastname, email, phone, where, age, role } = req.body;
-
-      const updatedUser = await User.findByIdAndUpdate(
-        id,
-        { firstname, lastname, email, phone, where, age, role },
-        { returnDocument: "after", runValidators: true }
-      ).select("-password");
-
-      if (!updatedUser) {
-        return res.status(404).json({ message: "Utilisateur introuvable" });
-      }
-
-      res.status(200).json({ message: "Profil mis à jour", user: updatedUser });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  },
-);
-
 // GET /admin/profil → renvoie les infos de l'admin connecté
 router.get("/admin/profil", verifyToken, verifyRole("admin"), async (req, res) => {
   try {

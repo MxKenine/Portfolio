@@ -1,18 +1,20 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import Admin from "./pages/Admin";
-import AdminSideNav from "./components/Sidenav";
-import VerifyEmail from "./pages/VerifyEmail";
-import CV from "./pages/CV";
-import Contact from "./pages/Contact";
-import Footer from "./components/Footer";
-import Projets from "./pages/Projets";
-import ProjetDetail from "./pages/ProjetDetail";
-import ProfilAdmin from "./pages/ProfilAdmin";
-import ExperiencesAdmin from "./pages/ExperiencesAdmin";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import AdminSideNav from "./components/layout/Sidenav";
+
+import Home from "./pages/public/Home";
+import Register from "./pages/public/Register";
+import Login from "./pages/public/Login";
+import VerifyEmail from "./pages/public/VerifyEmail";
+import CV from "./pages/public/CV";
+import Contact from "./pages/public/Contact";
+import Projets from "./pages/public/Projets";
+import ProjetDetail from "./pages/public/ProjetDetail";
+
+import Admin from "./pages/admin/Admin";
+import ProfilAdmin from "./pages/admin/ProfilAdmin";
+import ExperiencesAdmin from "./pages/admin/ExperiencesAdmin";
 
 export function UserNavbar() {
   return (

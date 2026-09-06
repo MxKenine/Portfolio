@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EditProfil from "./Editprofil";
+import EditProfil from "../../components/admin/Editprofil";
 
 export default function ProfilAdmin() {
   const [user, setUser] = useState(null);

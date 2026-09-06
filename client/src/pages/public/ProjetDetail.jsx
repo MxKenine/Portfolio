@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink } from "lucide-react";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/layout/Navbar";
 
 export default function ProjetDetail() {
   const { projetId } = useParams();
