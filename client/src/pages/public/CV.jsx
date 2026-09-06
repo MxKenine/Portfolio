@@ -11,6 +11,8 @@ import {
 export default function CV() {
   const [cv, setCv] = useState(null);
   const [error, setError] = useState(null);
+  const [revealed, setRevealed] = useState(null); // coordonnées révélées à la demande
+  const [loadingContact, setLoadingContact] = useState(false);
 
   async function getData() {
     try {
@@ -28,6 +30,20 @@ export default function CV() {
     getData();
   }, []);
 
+  async function revealContact() {
+    setLoadingContact(true);
+    try {
+      const response = await fetch(`http://localhost:3000/cv/public/contact`);
+      if (!response.ok) throw new Error("Impossible de récupérer les coordonnées");
+      const data = await response.json();
+      setRevealed(data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoadingContact(false);
+    }
+  }
+
   if (error) {
     return <p className="text-center text-red-500 py-20">{error}</p>;
   }
@@ -36,21 +52,21 @@ export default function CV() {
     return <p className="text-center text-gray-500 py-20">Chargement...</p>;
   }
 
-  const user = cv.user; // infos de profil ramenées via populate côté backend
+  const user = cv.user; // infos de profil ramenées via populate côté backend (sans email/phone)
 
   return (
-    <div data-theme="light" className=" bg-white">
+    <main data-theme="light" className="bg-white">
       <div className="max-w-5xl mx-auto px-6 py-10">
-        <div className="border border-blue-300 rounded-lg overflow-hidden">
+        <article className="border border-blue-300 rounded-lg overflow-hidden">
           {/* Bandeau profil */}
-          <div className="bg-gray-200 px-8 py-8 flex flex-col md:flex-row gap-6 items-start md:items-center">
+          <header className="bg-gray-200 px-8 py-8 flex flex-col md:flex-row gap-6 items-start md:items-center">
             <img
               src={
                 user.avatar
                   ? `http://localhost:3000/${user.avatar}`
                   : "http://localhost:3000/uploads/1788435999097.jpeg"
               }
-              alt="Avatar"
+              alt={`Photo de profil de ${user.firstname} ${user.lastname}`}
               className="w-28 h-28 rounded-full object-cover shrink-0"
             />
 
@@ -59,23 +75,39 @@ export default function CV() {
                 {user.firstname} {user.lastname}
               </h1>
 
-              <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-700">
-                {user.email && (
-                  <span className="flex items-center gap-1.5">
-                    <Mail size={14} /> {user.email}
-                  </span>
+              <address className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-700 not-italic">
+                {revealed ? (
+                  <>
+                    {revealed.email && (
+                      <span className="flex items-center gap-1.5">
+                        <Mail size={14} aria-hidden="true" />
+                        <a href={`mailto:${revealed.email}`}>{revealed.email}</a>
+                      </span>
+                    )}
+                    {revealed.phone && (
+                      <span className="flex items-center gap-1.5">
+                        <Phone size={14} aria-hidden="true" />
+                        <a href={`tel:${revealed.phone}`}>{revealed.phone}</a>
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={revealContact}
+                    disabled={loadingContact}
+                    className="text-emerald-700 underline text-sm cursor-pointer"
+                  >
+                    {loadingContact ? "Chargement..." : "Afficher les coordonnées"}
+                  </button>
                 )}
-                {user.phone && (
-                  <span className="flex items-center gap-1.5">
-                    <Phone size={14} /> {user.phone}
-                  </span>
-                )}
+
                 {user.where && (
                   <span className="flex items-center gap-1.5">
-                    <MapPin size={14} /> {user.where}
+                    <MapPin size={14} aria-hidden="true" /> {user.where}
                   </span>
                 )}
-              </div>
+              </address>
 
               <a
                 href="/contact"
@@ -84,82 +116,106 @@ export default function CV() {
                 Contactez-moi
               </a>
             </div>
-          </div>
+          </header>
 
           <div className="grid md:grid-cols-3">
             {/* Expériences */}
-            <div className="md:col-span-2 px-8 py-6 border-t border-blue-200">
-              <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5">
-                <Briefcase size={18} /> Expériences
+            <section
+              aria-labelledby="experiences-heading"
+              className="md:col-span-2 px-8 py-6 border-t border-blue-200"
+            >
+              <h2
+                id="experiences-heading"
+                className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5"
+              >
+                <Briefcase size={18} aria-hidden="true" /> Expériences
               </h2>
 
-              <div className="space-y-6">
+              <ul className="space-y-6">
                 {cv.experiences?.map((exp, i) => (
-                  <div key={i}>
-                    <div className="flex items-start justify-between gap-3">
-                      <h3 className="font-semibold text-gray-900">
-                        {exp.title}
-                      </h3>
-                      <span className="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1 whitespace-nowrap">
-                        {exp.startDate} - {exp.endDate}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-0.5">
-                      {exp.company}
-                    </p>
-                    <p className="text-sm text-gray-700 mt-2 leading-relaxed">
-                      {exp.description}
-                    </p>
-
-                    {exp.tags?.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        {exp.tags.map((tag, j) => (
-                          <span
-                            key={j}
-                            className="text-xs bg-gray-100 text-gray-700 rounded px-2 py-1"
-                          >
-                            {tag}
-                          </span>
-                        ))}
+                  <li key={i}>
+                    <article>
+                      <div className="flex items-start justify-between gap-3">
+                        <h3 className="font-semibold text-gray-900">
+                          {exp.title}
+                        </h3>
+                        <span className="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1 whitespace-nowrap">
+                          {exp.startDate} - {exp.endDate}
+                        </span>
                       </div>
-                    )}
-                  </div>
+                      <p className="text-sm text-gray-600 mt-0.5">
+                        {exp.company}
+                      </p>
+                      <p className="text-sm text-gray-700 mt-2 leading-relaxed">
+                        {exp.description}
+                      </p>
+
+                      {exp.tags?.length > 0 && (
+                        <ul className="flex flex-wrap gap-2 mt-3">
+                          {exp.tags.map((tag, j) => (
+                            <li
+                              key={j}
+                              className="text-xs bg-gray-100 text-gray-700 rounded px-2 py-1"
+                            >
+                              {tag}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </article>
+                  </li>
                 ))}
-              </div>
-            </div>
+              </ul>
+            </section>
 
             {/* Compétences + Langues */}
             <div className="border-t md:border-t-0 md:border-l border-blue-200 bg-gray-50">
-              <div className="px-6 py-6">
-                <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5">
-                  <Award size={18} /> Compétences
+              <section aria-labelledby="skills-heading" className="px-6 py-6">
+                <h2
+                  id="skills-heading"
+                  className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5"
+                >
+                  <Award size={18} aria-hidden="true" /> Compétences
                 </h2>
 
-                <div className="space-y-4">
+                <ul className="space-y-4">
                   {cv.skills?.map((skill, i) => (
-                    <div key={i}>
+                    <li key={i}>
                       <p className="text-sm text-gray-800 mb-1">
                         {skill.name}
                       </p>
-                      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="w-full h-2 bg-gray-200 rounded-full overflow-hidden"
+                        role="progressbar"
+                        aria-valuenow={skill.level}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={`Niveau en ${skill.name}`}
+                      >
                         <div
                           className="h-full bg-emerald-500 rounded-full"
                           style={{ width: `${skill.level}%` }}
                         />
                       </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
-              </div>
+                </ul>
+              </section>
 
-              <div className="px-6 py-6 border-t border-gray-200">
-                <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5">
-                  <LanguagesIcon size={18} /> Langues
+              <section
+                aria-labelledby="languages-heading"
+                className="px-6 py-6 border-t border-gray-200"
+              >
+                <h2
+                  id="languages-heading"
+                  className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5"
+                >
+                  <LanguagesIcon size={18} aria-hidden="true" /> Langues
                 </h2>
 
-                <div className="grid grid-cols-2 gap-4">
+                <ul className="grid grid-cols-2 gap-4">
                   {cv.languages?.map((lang, i) => (
-                    <div key={i} className="bg-white rounded-md p-3">
+                    <li key={i} className="bg-white rounded-md p-3">
                       <p className="text-sm font-medium text-gray-900">
                         {lang.name}
                       </p>
@@ -168,22 +224,27 @@ export default function CV() {
                           {lang.label}
                         </p>
                       )}
-                      <div className="flex gap-1 mt-2">
+                      <div
+                        className="flex gap-1 mt-2"
+                        role="img"
+                        aria-label={`Niveau ${lang.level} sur 6`}
+                      >
                         {[0, 1, 2, 3, 4, 5].map((dot) => (
                           <span
                             key={dot}
+                            aria-hidden="true"
                             className={`w-2 h-2 rounded-full ${dot < lang.level ? "bg-emerald-500" : "bg-gray-300"}`}
                           />
                         ))}
                       </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
-              </div>
+                </ul>
+              </section>
             </div>
           </div>
-        </div>
+        </article>
       </div>
-    </div>
+    </main>
   );
 }

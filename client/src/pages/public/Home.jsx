@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 
 export default function HomeHero() {
   return (
-    <div className="flex h-full bg-white">
-      <main className="flex justify-center mx-auto  md:py-32">
+    <main className="flex h-full bg-white">
+      <div className="flex justify-center mx-auto  md:py-32">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="flex flex-col">
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-700">
@@ -54,7 +54,7 @@ export default function HomeHero() {
             />
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

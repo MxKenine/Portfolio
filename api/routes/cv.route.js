@@ -31,11 +31,10 @@ router.patch("/cv/me", verifyToken, verifyRole("admin"), async (req, res) => {
   }
 });
 
-// GET /cv/public → CV public de l'unique admin du site, enrichi des infos de profil
-// (il n'y a qu'un seul utilisateur/CV possible, donc pas besoin de :userId)
+// GET /cv/public → CV public de l'unique admin du site, sans coordonnées sensibles
+// (email/téléphone sont exclus par défaut, révélés uniquement via /cv/public/contact)
 router.get("/cv/public", async (req, res) => {
   try {
-    // On retrouve l'admin (unique) plutôt que de dépendre d'un id dans l'URL
     const admin = await User.findOne({ role: "admin" });
     if (!admin) {
       return res.status(404).json({ message: "Administrateur introuvable" });
@@ -43,11 +42,24 @@ router.get("/cv/public", async (req, res) => {
 
     const cv = await CV.findOne({ user: admin._id }).populate(
       "user",
-      "firstname lastname email phone where avatar"
+      "firstname lastname where avatar" // pas d'email ni de phone ici
     );
     if (!cv) return res.status(404).json({ message: "CV introuvable" });
 
     res.json({ cv });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// GET /cv/public/contact → révèle l'email et le téléphone de l'admin à la demande
+router.get("/cv/public/contact", async (req, res) => {
+  try {
+    const admin = await User.findOne({ role: "admin" }, "email phone");
+    if (!admin) {
+      return res.status(404).json({ message: "Administrateur introuvable" });
+    }
+    res.json({ email: admin.email, phone: admin.phone });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

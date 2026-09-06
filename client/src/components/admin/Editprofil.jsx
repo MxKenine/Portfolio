@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 export default function EditProfil({ user, onCancel, onUpdated }) {
   const [formData, setFormData] = useState({
     firstname: user.firstname || "",
