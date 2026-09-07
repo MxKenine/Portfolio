@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function HomeHero() {
   return (
-    <main className="flex bg-white">
+    <main className="flex min-h-full bg-white">
       <div className="flex justify-center mx-auto px-6 py-12 md:py-32">
         <div className="grid md:grid-cols-2 gap-10 md:gap-12 items-center">
           {/* Colonne avatar : passe en premier sur mobile */}

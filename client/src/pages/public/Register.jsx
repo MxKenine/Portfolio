@@ -57,7 +57,7 @@ export default function Register() {
   }
 
   return (
-    <div data-theme="light" className=" bg-white flex flex-col">
+    <div data-theme="light" className="min-h-full bg-white flex flex-col">
       {/* Formulaire centré */}
       <main className="flex-1 flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md bg-gray-100 rounded-lg p-10">
