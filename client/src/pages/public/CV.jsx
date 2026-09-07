@@ -11,7 +11,7 @@ import {
 export default function CV() {
   const [cv, setCv] = useState(null);
   const [error, setError] = useState(null);
-  const [revealed, setRevealed] = useState(null); // coordonnées révélées à la demande
+  const [revealed, setRevealed] = useState(null);
   const [loadingContact, setLoadingContact] = useState(false);
 
   async function getData() {
@@ -52,14 +52,14 @@ export default function CV() {
     return <p className="text-center text-gray-500 py-20">Chargement...</p>;
   }
 
-  const user = cv.user; // infos de profil ramenées via populate côté backend (sans email/phone)
+  const user = cv.user;
 
   return (
     <main data-theme="light" className="bg-white">
-      <div className="max-w-5xl mx-auto px-6 py-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
         <article className="border border-blue-300 rounded-lg overflow-hidden">
           {/* Bandeau profil */}
-          <header className="bg-gray-200 px-8 py-8 flex flex-col md:flex-row gap-6 items-start md:items-center">
+          <header className="bg-gray-200 px-5 sm:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 items-center md:items-center text-center md:text-left">
             <img
               src={
                 user.avatar
@@ -67,21 +67,23 @@ export default function CV() {
                   : "http://localhost:3000/uploads/1788435999097.jpeg"
               }
               alt={`Photo de profil de ${user.firstname} ${user.lastname}`}
-              className="w-28 h-28 rounded-full object-cover shrink-0"
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shrink-0"
             />
 
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 {user.firstname} {user.lastname}
               </h1>
 
-              <address className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-700 not-italic">
+              <address className="mt-3 flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-1 text-sm text-gray-700 not-italic">
                 {revealed ? (
                   <>
                     {revealed.email && (
                       <span className="flex items-center gap-1.5">
                         <Mail size={14} aria-hidden="true" />
-                        <a href={`mailto:${revealed.email}`}>{revealed.email}</a>
+                        <a href={`mailto:${revealed.email}`} className="break-all">
+                          {revealed.email}
+                        </a>
                       </span>
                     )}
                     {revealed.phone && (
@@ -122,7 +124,7 @@ export default function CV() {
             {/* Expériences */}
             <section
               aria-labelledby="experiences-heading"
-              className="md:col-span-2 px-8 py-6 border-t border-blue-200"
+              className="md:col-span-2 px-5 sm:px-8 py-6 border-t border-blue-200"
             >
               <h2
                 id="experiences-heading"
@@ -135,11 +137,11 @@ export default function CV() {
                 {cv.experiences?.map((exp, i) => (
                   <li key={i}>
                     <article>
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-3">
                         <h3 className="font-semibold text-gray-900">
                           {exp.title}
                         </h3>
-                        <span className="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1 whitespace-nowrap">
+                        <span className="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1 whitespace-nowrap w-fit">
                           {exp.startDate} - {exp.endDate}
                         </span>
                       </div>
@@ -170,7 +172,7 @@ export default function CV() {
 
             {/* Compétences + Langues */}
             <div className="border-t md:border-t-0 md:border-l border-blue-200 bg-gray-50">
-              <section aria-labelledby="skills-heading" className="px-6 py-6">
+              <section aria-labelledby="skills-heading" className="px-5 sm:px-6 py-6">
                 <h2
                   id="skills-heading"
                   className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5"
@@ -204,7 +206,7 @@ export default function CV() {
 
               <section
                 aria-labelledby="languages-heading"
-                className="px-6 py-6 border-t border-gray-200"
+                className="px-5 sm:px-6 py-6 border-t border-gray-200"
               >
                 <h2
                   id="languages-heading"
@@ -213,7 +215,7 @@ export default function CV() {
                   <LanguagesIcon size={18} aria-hidden="true" /> Langues
                 </h2>
 
-                <ul className="grid grid-cols-2 gap-4">
+                <ul className="grid grid-cols-2 gap-3 sm:gap-4">
                   {cv.languages?.map((lang, i) => (
                     <li key={i} className="bg-white rounded-md p-3">
                       <p className="text-sm font-medium text-gray-900">

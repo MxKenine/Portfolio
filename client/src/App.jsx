@@ -20,7 +20,9 @@ export function UserNavbar() {
   return (
     <div className="flex flex-col h-dvh">
       <Navbar />
-      <Outlet />
+      <div className="flex-1 overflow-y-auto">
+        <Outlet />
+      </div>
       <Footer />
     </div>
   );
