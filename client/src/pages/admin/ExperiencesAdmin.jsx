@@ -10,7 +10,7 @@ export default function ExperiencesAdmin() {
 
   async function getCv() {
     try {
-      const response = await fetch(`http://localhost:3000/cv/me`, {
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/cv/me`, {
         method: "GET",
         credentials: "include",
       });

@@ -7,7 +7,7 @@ export default function Admin() {
 
   async function getAdminData() {
     try {
-      const response = await fetch(`http://localhost:3000/admin`, {
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/admin`, {
         method: "GET",
         credentials: "include",
       });

@@ -13,7 +13,7 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
   });
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(
-    user.avatar ? `http://localhost:3000/${user.avatar}` : null
+    user.avatar ? `${import.meta.env.VITE_BACK_URL}/${user.avatar}` : null
   );
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -47,7 +47,7 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
         payload.append("avatar", avatarFile);
       }
 
-      const response = await fetch(`http://localhost:3000/admin/profil`, {
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/admin/profil`, {
         method: "PATCH",
         credentials: "include",
         body: payload, // pas de Content-Type manuel : le navigateur le gère avec FormData

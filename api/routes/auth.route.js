@@ -41,7 +41,7 @@ router.post("/register", upload.single("avatar"), async (req, res) => {
       avatar: avatarPath,
     });
 
-    const url = `http://localhost:5173/verify-email?token=${token}`;
+    const url = `${process.env.FRONT_URL}/verify-email?token=${token}`;
     sendConfirmationEmail(email, url);
 
     res.status(201).json({ message: "L'utilisateur a été ajouté" });

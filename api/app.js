@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const FRONT_URL = process.env.FRONT_URL || 'http://localhost:5173';
+const FRONT_URL = process.env.FRONT_URL;
 
 app.use(cors({
   origin: FRONT_URL,

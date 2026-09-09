@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { ShieldCheck, LogIn } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ShieldCheck } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,7 +14,7 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/login`, {
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

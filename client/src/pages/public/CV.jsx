@@ -16,7 +16,7 @@ export default function CV() {
 
   async function getData() {
     try {
-      const response = await fetch(`http://localhost:3000/cv/public`);
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/cv/public`);
       if (!response.ok) throw new Error("Erreur de chargement");
 
       const data = await response.json();
@@ -33,7 +33,7 @@ export default function CV() {
   async function revealContact() {
     setLoadingContact(true);
     try {
-      const response = await fetch(`http://localhost:3000/cv/public/contact`);
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/cv/public/contact`);
       if (!response.ok) throw new Error("Impossible de récupérer les coordonnées");
       const data = await response.json();
       setRevealed(data);
@@ -63,8 +63,8 @@ export default function CV() {
             <img
               src={
                 user.avatar
-                  ? `http://localhost:3000/${user.avatar}`
-                  : "http://localhost:3000/uploads/1788435999097.jpeg"
+                  ? `${import.meta.env.VITE_BACK_URL}/${user.avatar}`
+                  : `${import.meta.env.VITE_BACK_URL}/uploads/1788435999097.jpeg`
               }
               alt={`Photo de profil de ${user.firstname} ${user.lastname}`}
               className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shrink-0"

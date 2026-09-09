@@ -7,7 +7,7 @@ export default function Projets() {
 
   async function getData() {
     try {
-      const response = await fetch(`http://localhost:3000/projets`);
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/projets`);
       if (!response.ok) throw new Error("Erreur de chargement des projets");
       const data = await response.json();
       setProjets(data.projets);
