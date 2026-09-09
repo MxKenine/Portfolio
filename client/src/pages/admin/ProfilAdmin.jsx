@@ -10,7 +10,7 @@ export default function ProfilAdmin() {
 
   async function getProfil() {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/admin/profil`, {
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}admin/profil`, {
         method: "GET",
         credentials: "include",
       });

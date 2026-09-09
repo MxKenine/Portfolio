@@ -10,7 +10,7 @@ export default function ProjetDetail() {
 
   async function getData() {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/projets/${projetId}`);
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}projets/${projetId}`);
       if (!response.ok) throw new Error("Projet introuvable");
       const data = await response.json();
       setProjet(data.projet);

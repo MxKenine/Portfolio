@@ -8,7 +8,7 @@ export default function VerifyEmail() {
 
   async function validateEmail() {
     const response = await fetch(
-      `${import.meta.env.VITE_BACK_URL}/verify-email?token=${token}`,
+      `${import.meta.env.VITE_BACK_URL}verify-email?token=${token}`,
     );
     const data = await response.json();
     setMessage(data.message);

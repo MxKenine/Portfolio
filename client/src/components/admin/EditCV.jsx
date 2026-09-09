@@ -127,7 +127,7 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
     setSaving(true);
     try {
       const payload = { ...formData };
-      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/cv/me`, {
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}cv/me`, {
         method: "PATCH",
         credentials: "include", // envoie le cookie de session (JWT)
         headers: { "Content-Type": "application/json" },

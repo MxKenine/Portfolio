@@ -8,7 +8,7 @@ export default function HomeHero() {
           {/* Colonne avatar : passe en premier sur mobile */}
           <div className="flex justify-center md:justify-end order-1 md:order-2">
             <img
-              src={`${import.meta.env.VITE_BACK_URL}/uploads/1788435999097.jpeg`}
+              src={`${import.meta.env.VITE_BACK_URL}uploads/1788435999097.jpeg`}
               alt="Avatar"
               className="w-48 h-48 md:w-72 md:h-72 rounded-full object-cover shadow-lg"
             />

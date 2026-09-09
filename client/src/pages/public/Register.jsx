@@ -36,7 +36,7 @@ export default function Register() {
         formData.append("avatar", avatar);
       }
 
-      const response = await fetch(`${import.meta.env.VITE_BACK_URL}/register`, {
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}register`, {
         method: "POST",
         body: formData,
       });
