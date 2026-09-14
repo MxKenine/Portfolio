@@ -20,7 +20,7 @@ const FRONT_URL = process.env.FRONT_URL;
 
 app.use(cors({
   origin: FRONT_URL,
-  credentials: true,
+  credentials: 'include',
 }));
 app.use(cookieParser());
 app.use(express.json());
