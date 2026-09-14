@@ -20,7 +20,7 @@ router.get("/admin", verifyToken, verifyRole("admin"), async (req, res) => {
   }
 });
 
-// GET /admin/profil → renvoie les infos de l'admin connecté
+// GET /admin/profil, renvoie les infos de l'admin connecté
 router.get("/admin/profil", verifyToken, verifyRole("admin"), async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -33,7 +33,7 @@ router.get("/admin/profil", verifyToken, verifyRole("admin"), async (req, res) =
   }
 });
 
-// PATCH /admin/profil → met à jour les infos de l'admin connecté (+ avatar optionnel)
+// PATCH /admin/profil, met à jour les infos de l'admin connecté (+ avatar optionnel)
 router.patch(
   "/admin/profil",
   verifyToken,

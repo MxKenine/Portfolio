@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      require: true,
-      minLenght: 6,
+      required: true,
+      minLenght: 8,
     },
     token: {
       type: String,
@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: false,
+      required: true,
     },
     firstname: {
       type: String,

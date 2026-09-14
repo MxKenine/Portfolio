@@ -10,11 +10,11 @@ import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 
-// POST /register → crée un nouvel utilisateur (avec avatar optionnel)
+// POST /register, crée un nouvel utilisateur (avec avatar optionnel)
 router.post("/register", upload.single("avatar"), async (req, res) => {
   try {
     const { email, password, firstname, lastname, phone, age, where } = req.body;
-
+ // const = destructuration
     if (!email || !password) {
       return res.status(400).json({ message: "Veuillez remplir les champs" });
     }
@@ -50,7 +50,7 @@ router.post("/register", upload.single("avatar"), async (req, res) => {
   }
 });
 
-// POST /login → authentifie un utilisateur et pose un cookie JWT
+// POST /login, authentifie un utilisateur et pose un cookie JWT
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -88,7 +88,7 @@ router.post("/login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: "none",
+      sameSite: "lax",
       maxAge: 3600000,
     });
 
@@ -103,7 +103,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// POST /login-cookie → vérifie la validité du cookie de session et renvoie l'utilisateur
+// POST /login-cookie, vérifie la validité du cookie de session et renvoie l'utilisateur
 router.post("/login-cookie", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id, "-password");
@@ -116,7 +116,7 @@ router.post("/login-cookie", verifyToken, async (req, res) => {
   }
 });
 
-// POST /logout → déconnecte l'utilisateur en supprimant le cookie de session
+// POST /logout, déconnecte l'utilisateur en supprimant le cookie de session
 router.post("/logout", (req, res) => {
   res.cookie("token", "", {
     httpOnly: true,
@@ -127,7 +127,7 @@ router.post("/logout", (req, res) => {
   return res.status(200).json({ message: "Disconnected" });
 });
 
-// GET /verify-email → active le compte utilisateur via le token reçu par email
+// GET /verify-email, active le compte utilisateur via le token reçu par email
 router.get("/verify-email", async (req, res) => {
   try {
     const { token } = req.query;

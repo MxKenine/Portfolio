@@ -15,6 +15,7 @@ import ProjetDetail from "./pages/public/ProjetDetail";
 import Admin from "./pages/admin/Admin";
 import ProfilAdmin from "./pages/admin/ProfilAdmin";
 import ExperiencesAdmin from "./pages/admin/ExperiencesAdmin";
+import Editprojet from "./components/admin/Editprojet";
 
 export function UserNavbar() {
   return (
@@ -48,6 +49,7 @@ export default function App() {
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/profil" element={<ProfilAdmin />} />
             <Route path="/admin/experiences" element={<ExperiencesAdmin />} />
+            <Route path="/admin/projets" element={<Editprojet />} />
           </Route>
         </Routes>
       </BrowserRouter>

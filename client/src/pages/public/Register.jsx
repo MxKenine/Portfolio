@@ -43,7 +43,7 @@ export default function Register() {
 
       if (!response.ok) {
         const errorBody = await response.json().catch(() => null);
-        console.log("Détail de l'erreur :", errorBody);
+        // console.log("Détail de l'erreur :", errorBody); 
         throw new Error(errorBody?.message || "Erreur lors de l'inscription");
       }
 

@@ -6,7 +6,7 @@ import { verifyToken, verifyRole } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
-// GET /cv/me → renvoie le CV de l'admin connecté
+// GET /cv/me, renvoie le CV de l'admin connecté
 router.get("/cv/me", verifyToken, verifyRole("admin"), async (req, res) => {
   try {
     const cv = await CV.findOne({ user: req.user.id });
@@ -17,7 +17,7 @@ router.get("/cv/me", verifyToken, verifyRole("admin"), async (req, res) => {
   }
 });
 
-// PATCH /cv/me → crée ou met à jour le CV de l'admin connecté
+// PATCH /cv/me, crée ou met à jour le CV de l'admin connecté
 router.patch("/cv/me", verifyToken, verifyRole("admin"), async (req, res) => {
   try {
     const cv = await CV.findOneAndUpdate(
@@ -31,7 +31,7 @@ router.patch("/cv/me", verifyToken, verifyRole("admin"), async (req, res) => {
   }
 });
 
-// GET /cv/public → CV public de l'unique admin du site, sans coordonnées sensibles
+// GET /cv/public, CV public de l'unique admin du site, sans coordonnées sensibles
 // (email/téléphone sont exclus par défaut, révélés uniquement via /cv/public/contact)
 router.get("/cv/public", async (req, res) => {
   try {
@@ -52,7 +52,7 @@ router.get("/cv/public", async (req, res) => {
   }
 });
 
-// GET /cv/public/contact → révèle l'email et le téléphone de l'admin à la demande
+// GET /cv/public/contact, révèle l'email et le téléphone de l'admin à la demande
 router.get("/cv/public/contact", async (req, res) => {
   try {
     const admin = await User.findOne({ role: "admin" }, "email phone");
