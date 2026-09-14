@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/layout/Navbar";
 
-export default function Editprojet() {
+export default function EditProjet() {
   const { projetId } = useParams(); // présent = édition, absent = création
   const navigate = useNavigate();
   const isEdit = Boolean(projetId);
 
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
     title: "",
     image: "",
     tags: "",
@@ -16,6 +16,8 @@ export default function Editprojet() {
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(isEdit);
+  const [saving, setSaving] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (!isEdit) return;
@@ -25,7 +27,7 @@ export default function Editprojet() {
         const res = await fetch(`${import.meta.env.VITE_BACK_URL}projets/${projetId}`);
         if (!res.ok) throw new Error("Projet introuvable");
         const data = await res.json();
-        setForm({
+        setFormData({
           title: data.projet.title || "",
           image: data.projet.image || "",
           tags: (data.projet.tags || []).join(", "),
@@ -43,16 +45,18 @@ export default function Editprojet() {
   }, [projetId, isEdit]);
 
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setSuccess(false);
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+    setSaving(true);
 
     const payload = {
-      ...form,
-      tags: form.tags
+      ...formData,
+      tags: formData.tags
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean),
@@ -71,14 +75,21 @@ export default function Editprojet() {
       if (!res.ok) throw new Error("Erreur lors de l'enregistrement");
       const data = await res.json();
 
-      navigate(`/projets/${isEdit ? projetId : data.projet._id}`);
+      setSuccess(true);
+      setTimeout(() => {
+        navigate(`/projets/${isEdit ? projetId : data.projet._id}`);
+      }, 600);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setSaving(false);
     }
   }
 
   async function handleDelete() {
     if (!confirm("Supprimer ce projet ?")) return;
+    setSaving(true);
+    setError(null);
     try {
       const res = await fetch(`${import.meta.env.VITE_BACK_URL}projets/${projetId}`, {
         method: "DELETE",
@@ -87,7 +98,12 @@ export default function Editprojet() {
       navigate("/projets");
     } catch (err) {
       setError(err.message);
+      setSaving(false);
     }
+  }
+
+  function handleCancel() {
+    navigate(isEdit ? `/projets/${projetId}` : "/projets");
   }
 
   if (loading) {
@@ -104,97 +120,153 @@ export default function Editprojet() {
       <Navbar />
 
       <div className="max-w-2xl mx-auto px-6 py-16">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          {isEdit ? "Modifier le projet" : "Nouveau projet"}
-        </h1>
+        <div className="card bg-base-100 shadow-md">
+          <div className="card-body">
+            <h2 className="card-title text-2xl mb-2">
+              {isEdit ? "Modifier le projet" : "Nouveau projet"}
+            </h2>
+            <p className="text-sm text-gray-500 mb-6">
+              Ces informations sont affichées sur la page publique des projets.
+            </p>
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              {/* Aperçu image */}
+              <div className="flex items-center gap-4">
+                <div className="w-28 h-20 rounded-lg overflow-hidden bg-base-200 ring ring-emerald-500 ring-offset-base-100 ring-offset-2 flex items-center justify-center">
+                  {formData.image ? (
+                    <img
+                      src={formData.image}
+                      alt="Aperçu"
+                      className="w-full h-full object-cover"
+                      onError={(e) => (e.currentTarget.style.display = "none")}
+                    />
+                  ) : (
+                    <span className="text-xs text-gray-400">Aperçu</span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-400">
+                  Aperçu généré à partir de l'URL renseignée ci-dessous.
+                </p>
+              </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 mt-8">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Titre
-            </label>
-            <input
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-400"
-            />
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="form-control sm:col-span-2">
+                  <label className="label">
+                    <span className="label-text">Titre</span>
+                  </label>
+                  <input
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    required
+                    className="input input-bordered w-full"
+                    placeholder="Nom du projet"
+                  />
+                </div>
+
+                <div className="form-control sm:col-span-2">
+                  <label className="label">
+                    <span className="label-text">Image (URL)</span>
+                  </label>
+                  <input
+                    name="image"
+                    value={formData.image}
+                    onChange={handleChange}
+                    required
+                    className="input input-bordered w-full"
+                    placeholder="https://..."
+                  />
+                </div>
+
+                <div className="form-control sm:col-span-2">
+                  <label className="label">
+                    <span className="label-text">Tags</span>
+                  </label>
+                  <input
+                    name="tags"
+                    value={formData.tags}
+                    onChange={handleChange}
+                    className="input input-bordered w-full"
+                    placeholder="React, Node, MongoDB"
+                  />
+                </div>
+
+                <div className="form-control sm:col-span-2">
+                  <label className="label">
+                    <span className="label-text">Description</span>
+                  </label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    rows={4}
+                    className="textarea textarea-bordered w-full"
+                    placeholder="Décris le projet..."
+                  />
+                </div>
+
+                <div className="form-control sm:col-span-2">
+                  <label className="label">
+                    <span className="label-text">Lien</span>
+                  </label>
+                  <input
+                    name="link"
+                    value={formData.link}
+                    onChange={handleChange}
+                    className="input input-bordered w-full"
+                    placeholder="https://..."
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <div className="alert alert-error text-sm py-2">
+                  <span>{error}</span>
+                </div>
+              )}
+
+              {success && !error && (
+                <div className="alert alert-success text-sm py-2">
+                  <span>Projet enregistré avec succès.</span>
+                </div>
+              )}
+
+              <div className="flex justify-between items-center pt-2 border-t border-base-200">
+                {isEdit ? (
+                  <button
+                    type="button"
+                    onClick={handleDelete}
+                    disabled={saving}
+                    className="btn btn-outline btn-error btn-sm"
+                  >
+                    Supprimer
+                  </button>
+                ) : (
+                  <span />
+                )}
+
+                <div className="flex gap-3">
+                  <button type="button" onClick={handleCancel} className="btn btn-ghost">
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="btn bg-emerald-500 hover:bg-emerald-600 text-white border-none"
+                  >
+                    {saving ? (
+                      <span className="loading loading-spinner loading-sm" />
+                    ) : isEdit ? (
+                      "Enregistrer"
+                    ) : (
+                      "Créer"
+                    )}
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Image (URL)
-            </label>
-            <input
-              name="image"
-              value={form.image}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-400"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tags (séparés par des virgules)
-            </label>
-            <input
-              name="tags"
-              value={form.tags}
-              onChange={handleChange}
-              placeholder="React, Node, MongoDB"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-400"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              rows={4}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-400"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Lien
-            </label>
-            <input
-              name="link"
-              value={form.link}
-              onChange={handleChange}
-              placeholder="https://..."
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-400"
-            />
-          </div>
-
-          <div className="flex items-center gap-3 pt-4">
-            <button
-              type="submit"
-              className="bg-emerald-500 text-white px-5 py-2 rounded-lg hover:bg-emerald-600 transition-colors"
-            >
-              {isEdit ? "Enregistrer" : "Créer"}
-            </button>
-
-            {isEdit && (
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="text-red-500 px-5 py-2 rounded-lg border border-red-200 hover:bg-red-50 transition-colors"
-              >
-                Supprimer
-              </button>
-            )}
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );
