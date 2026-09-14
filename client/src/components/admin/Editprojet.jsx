@@ -181,20 +181,6 @@ export default function EditProjet() {
 
                 <div className="form-control sm:col-span-2">
                   <label className="label">
-                    <span className="label-text">Image (URL)</span>
-                  </label>
-                  <input
-                    name="image"
-                    value={formData.image}
-                    onChange={handleChange}
-                    required
-                    className="input input-bordered w-full"
-                    placeholder="https://..."
-                  />
-                </div>
-
-                <div className="form-control sm:col-span-2">
-                  <label className="label">
                     <span className="label-text">Tags</span>
                   </label>
                   <input
