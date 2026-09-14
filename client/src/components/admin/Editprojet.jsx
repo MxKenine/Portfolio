@@ -86,6 +86,14 @@ export default function EditProjet() {
     }
   }
 
+    function handleAvatarChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file)); // aperçu immédiat avant envoi
+    setSuccess(false);
+  }
+
   async function handleDelete() {
     if (!confirm("Supprimer ce projet ?")) return;
     setSaving(true);
@@ -142,9 +150,18 @@ export default function EditProjet() {
                     <span className="text-xs text-gray-400">Aperçu</span>
                   )}
                 </div>
-                <p className="text-xs text-gray-400">
-                  Aperçu généré à partir de l'URL renseignée ci-dessous.
-                </p>
+                 <div>
+              <label className="btn btn-sm btn-outline">
+                Changer la photo
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  className="hidden"
+                />
+              </label>
+              <p className="text-xs text-gray-400 mt-1">JPG, PNG — 2 Mo max</p>
+            </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
