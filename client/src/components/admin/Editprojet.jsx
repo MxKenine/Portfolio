@@ -117,8 +117,6 @@ export default function EditProjet() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
-
       <div className="max-w-2xl mx-auto px-6 py-16">
         <div className="card bg-base-100 shadow-md">
           <div className="card-body">
