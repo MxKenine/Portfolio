@@ -88,7 +88,7 @@ export default function Login() {
                       : "Afficher le mot de passe"
                   }
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
             </div>

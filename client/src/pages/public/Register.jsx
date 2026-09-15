@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShieldCheck, UserPlus } from "lucide-react";
+import { ShieldCheck, UserPlus, Eye, EyeOff } from "lucide-react";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -16,6 +16,7 @@ export default function Register() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -86,13 +87,27 @@ export default function Register() {
               <label className="label pb-1">
                 <span className="label-text text-gray-600">Mot de passe</span>
               </label>
-              <input
-                type="password"
-                placeholder="••••••••••••"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="input input-bordered w-full bg-white"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Mot de passe..."
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input input-bordered w-full bg-white pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  tabIndex={-1}
+                  aria-label={
+                    showPassword
+                      ? "Masquer le mot de passe"
+                      : "Afficher le mot de passe"
+                  }
+                >
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
