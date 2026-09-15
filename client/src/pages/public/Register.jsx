@@ -72,7 +72,7 @@ export default function Register() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="form-control">
               <label className="label pb-1">
-                <span className="label-text text-gray-600">E-mail</span>
+                <span className="label-text text-gray-600">E-mail<span className="text-red-500">*</span></span>
               </label>
               <input
                 type="email"
@@ -85,7 +85,7 @@ export default function Register() {
 
             <div className="form-control">
               <label className="label pb-1">
-                <span className="label-text text-gray-600">Mot de passe</span>
+                <span className="label-text text-gray-600">Mot de passe<span className="text-red-500">*</span></span>
               </label>
               <div className="relative">
                 <input

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 // Valeurs par défaut utilisées quand on ajoute une nouvelle entrée
 // (expérience, compétence, langue) au formulaire
-const emptyExperience = {
+const emptyExperience = { 
   title: "",
   company: "",
   startDate: "",

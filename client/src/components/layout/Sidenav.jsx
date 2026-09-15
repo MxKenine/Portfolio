@@ -6,6 +6,8 @@ const navItems = [
   { to: "/admin/profil", label: "Profil", icon: User },
   { to: "/admin/experiences", label: "Experiences", icon: Briefcase },
   { to: "/admin/projets", label: "Projets", icon: Package },
+  { to: "/admin/competences", label: "Compétences", icon: Package },
+  { to: "/admin/langues", label: "Langues", icon: Package },
 ];
 
 export default function AdminSideNav() {
