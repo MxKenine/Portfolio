@@ -1,14 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const emptySkill = { name: "", level: 50 };
 
-export default function EditCompetences({ cv, onCancel, onUpdated }) {
-  const [skills, setSkills] = useState(cv?.skills?.length ? cv.skills : []);
+export default function EditCompetences({ onCancel, onUpdated }) {
+  const [skills, setSkills] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchCv() {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACK_URL}cv/me`, {
+          credentials: "include",
+        });
+        if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+            navigate("/login");
+            return;
+          }
+          if (response.status === 404) {
+            setSkills([]);
+            return;
+          }
+          throw new Error("Erreur lors du chargement du CV");
+        }
+        const data = await response.json();
+        setSkills(data.cv?.skills || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCv();
+  }, [navigate]);
 
   function markDirty() {
     setSuccess(false);
@@ -53,13 +82,23 @@ export default function EditCompetences({ cv, onCancel, onUpdated }) {
         throw new Error("Échec de la mise à jour des compétences");
       }
       const data = await response.json();
-      onUpdated(data.cv);
+      onUpdated?.(data.cv);
       setSuccess(true);
     } catch (err) {
       setError(err.message);
     } finally {
       setSaving(false);
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="card bg-base-100 shadow-md max-w-4xl mx-auto">
+        <div className="card-body">
+          <p className="text-center text-gray-500 py-10">Chargement...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -122,9 +161,11 @@ export default function EditCompetences({ cv, onCancel, onUpdated }) {
           )}
 
           <div className="flex justify-end gap-3 pt-2 border-t border-base-200">
-            <button type="button" onClick={onCancel} className="btn btn-ghost">
-              Annuler
-            </button>
+            {onCancel && (
+              <button type="button" onClick={onCancel} className="btn btn-ghost">
+                Annuler
+              </button>
+            )}
             <button
               type="submit"
               disabled={saving}
