@@ -1,48 +1,79 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/layout/Navbar";
+
+const emptyForm = {
+  title: "",
+  tags: "",
+  description: "",
+  link: "",
+};
 
 export default function EditProjet() {
-  const { projetId } = useParams(); // présent = édition, absent = création
   const navigate = useNavigate();
-  const isEdit = Boolean(projetId);
 
-  const [formData, setFormData] = useState({
-    title: "",
-    tags: "",
-    description: "",
-    link: "",
-  });
+  // --- Liste des projets ---
+  const [projets, setProjets] = useState([]);
+  const [loadingList, setLoadingList] = useState(true);
+  const [listError, setListError] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+
+  // --- Formulaire (création ou édition) ---
+  const [view, setView] = useState("list"); // "list" | "form"
+  const [editingId, setEditingId] = useState(null); // id du projet en cours d'édition, null = création
+  const [formData, setFormData] = useState(emptyForm);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    if (!isEdit) return;
-
-    async function fetchProjet() {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_BACK_URL}projets/${projetId}`);
-        if (!res.ok) throw new Error("Projet introuvable");
-        const data = await res.json();
-        setFormData({
-          title: data.projet.title || "",
-          tags: (data.projet.tags || []).join(", "),
-          description: data.projet.description || "",
-          link: data.projet.link || "",
-        });
-        setImagePreview(data.projet.image || null);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+  async function fetchProjets() {
+    setLoadingList(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACK_URL}projets`);
+      if (!response.ok) throw new Error("Erreur de chargement des projets");
+      const data = await response.json();
+      setProjets(data.projets);
+    } catch (err) {
+      setListError(err.message);
+    } finally {
+      setLoadingList(false);
     }
+  }
 
-    fetchProjet();
-  }, [projetId, isEdit]);
+  useEffect(() => {
+    fetchProjets();
+  }, []);
+
+  function openCreateForm() {
+    setEditingId(null);
+    setFormData(emptyForm);
+    setImageFile(null);
+    setImagePreview(null);
+    setError(null);
+    setSuccess(false);
+    setView("form");
+  }
+
+  function openEditForm(projet) {
+    setEditingId(projet._id);
+    setFormData({
+      title: projet.title || "",
+      tags: (projet.tags || []).join(", "),
+      description: projet.description || "",
+      link: projet.link || "",
+    });
+    setImageFile(null);
+    setImagePreview(projet.image || null);
+    setError(null);
+    setSuccess(false);
+    setView("form");
+  }
+
+  function backToList() {
+    setView("list");
+  }
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -53,7 +84,7 @@ export default function EditProjet() {
     const file = e.target.files[0];
     if (!file) return;
     setImageFile(file);
-    setImagePreview(URL.createObjectURL(file)); // aperçu immédiat avant envoi
+    setImagePreview(URL.createObjectURL(file));
     setSuccess(false);
   }
 
@@ -62,8 +93,9 @@ export default function EditProjet() {
     setError(null);
     setSaving(true);
 
+    const isEdit = Boolean(editingId);
+
     try {
-      // FormData nécessaire pour envoyer un fichier + du texte en même temps
       const payload = new FormData();
       payload.append("title", formData.title);
       payload.append("description", formData.description);
@@ -78,13 +110,13 @@ export default function EditProjet() {
         payload.append("image", imageFile);
       }
 
-      const url = `${import.meta.env.VITE_BACK_URL}projets${isEdit ? `/${projetId}` : ""}`;
+      const url = `${import.meta.env.VITE_BACK_URL}projets${isEdit ? `/${editingId}` : ""}`;
       const method = isEdit ? "PUT" : "POST";
 
       const res = await fetch(url, {
         method,
         credentials: "include",
-        body: payload, // pas de Content-Type manuel : le navigateur le gère avec FormData
+        body: payload,
       });
 
       if (!res.ok) {
@@ -94,11 +126,11 @@ export default function EditProjet() {
         }
         throw new Error("Erreur lors de l'enregistrement");
       }
-      const data = await res.json();
 
       setSuccess(true);
+      await fetchProjets();
       setTimeout(() => {
-        navigate(`/projets/${isEdit ? projetId : data.projet._id}`);
+        setView("list");
       }, 600);
     } catch (err) {
       setError(err.message);
@@ -107,12 +139,11 @@ export default function EditProjet() {
     }
   }
 
-  async function handleDelete() {
+  async function handleDelete(id) {
     if (!confirm("Supprimer ce projet ?")) return;
-    setSaving(true);
-    setError(null);
+    setDeletingId(id);
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACK_URL}projets/${projetId}`, {
+      const res = await fetch(`${import.meta.env.VITE_BACK_URL}projets/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -121,29 +152,125 @@ export default function EditProjet() {
           navigate("/login");
           return;
         }
-        throw new Error("Erreur lors de la suppression");
+        throw new Error("Échec de la suppression");
       }
-      navigate("/projets");
+      setProjets((prev) => prev.filter((p) => p._id !== id));
     } catch (err) {
-      setError(err.message);
-      setSaving(false);
+      setListError(err.message);
+    } finally {
+      setDeletingId(null);
     }
   }
 
-  function handleCancel() {
-    navigate(isEdit ? `/projets/${projetId}` : "/projets");
-  }
-
-  if (loading) {
+  // --- Vue liste ---
+  if (view === "list") {
     return (
       <div className="min-h-screen bg-white">
-        <p className="text-center text-gray-500 py-20">Chargement...</p>
+        <Navbar />
+
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Gestion des projets
+              </h1>
+              <p className="text-gray-600">
+                Ajoute, modifie ou supprime tes réalisations.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={openCreateForm}
+              className="btn bg-emerald-500 hover:bg-emerald-600 text-white border-none"
+            >
+              + Nouveau projet
+            </button>
+          </div>
+
+          {listError && (
+            <div className="alert alert-error text-sm py-2 mb-6">
+              <span>{listError}</span>
+            </div>
+          )}
+
+          {loadingList ? (
+            <p className="text-center text-gray-500 py-20">Chargement...</p>
+          ) : projets.length === 0 ? (
+            <p className="text-center text-gray-500 py-10">
+              Aucun projet pour le moment.
+            </p>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
+              {projets.map((projet) => (
+                <div
+                  key={projet._id}
+                  className="border border-gray-200 rounded-lg overflow-hidden flex"
+                >
+                  <div className="w-32 shrink-0 bg-gray-100">
+                    <img
+                      src={projet.image}
+                      alt={projet.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  <div className="p-4 flex flex-col justify-between flex-1">
+                    <div>
+                      <h2 className="font-semibold text-gray-900">
+                        {projet.title}
+                      </h2>
+                      {projet.tags?.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {projet.tags.map((tag, i) => (
+                            <span
+                              key={i}
+                              className="text-xs bg-gray-100 text-gray-700 rounded px-2 py-0.5"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2 mt-3">
+                      <button
+                        type="button"
+                        onClick={() => openEditForm(projet)}
+                        className="btn btn-outline btn-sm flex-1"
+                      >
+                        Éditer
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(projet._id)}
+                        disabled={deletingId === projet._id}
+                        className="btn btn-outline btn-error btn-sm flex-1"
+                      >
+                        {deletingId === projet._id ? (
+                          <span className="loading loading-spinner loading-xs" />
+                        ) : (
+                          "Supprimer"
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     );
   }
 
+  // --- Vue formulaire (création ou édition) ---
+  const isEdit = Boolean(editingId);
+
   return (
     <div className="min-h-screen bg-white">
+      <Navbar />
+
       <div className="max-w-2xl mx-auto px-6 py-16">
         <div className="card bg-base-100 shadow-md">
           <div className="card-body">
@@ -255,7 +382,7 @@ export default function EditProjet() {
                 {isEdit ? (
                   <button
                     type="button"
-                    onClick={handleDelete}
+                    onClick={() => handleDelete(editingId)}
                     disabled={saving}
                     className="btn btn-outline btn-error btn-sm"
                   >
@@ -266,7 +393,7 @@ export default function EditProjet() {
                 )}
 
                 <div className="flex gap-3">
-                  <button type="button" onClick={handleCancel} className="btn btn-ghost">
+                  <button type="button" onClick={backToList} className="btn btn-ghost">
                     Annuler
                   </button>
                   <button
