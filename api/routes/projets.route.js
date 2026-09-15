@@ -1,5 +1,4 @@
 import express from "express";
-
 import Projet from "../models/projet.model.js";
 
 const router = express.Router();
@@ -22,6 +21,41 @@ router.get("/projets/:id", async (req, res) => {
     res.json({ projet });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+
+// POST /projets → créer un projet
+router.post("/projets", async (req, res) => {
+  try {
+    const projet = await Projet.create(req.body);
+    res.status(201).json({ projet });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// PUT /projets/:id → modifier un projet
+router.put("/projets/:id", async (req, res) => {
+  try {
+    const projet = await Projet.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!projet) return res.status(404).json({ message: "Projet introuvable" });
+    res.json({ projet });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// DELETE /projets/:id → supprimer un projet
+router.delete("/projets/:id", async (req, res) => {
+  try {
+    const projet = await Projet.findByIdAndDelete(req.params.id);
+    if (!projet) return res.status(404).json({ message: "Projet introuvable" });
+    res.json({ message: "Projet supprimé" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 
