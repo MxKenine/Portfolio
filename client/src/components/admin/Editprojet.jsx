@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "../../components/layout/Navbar";
 
 export default function EditProjet() {
   const { projetId } = useParams(); // présent = édition, absent = création
@@ -9,11 +8,12 @@ export default function EditProjet() {
 
   const [formData, setFormData] = useState({
     title: "",
-    image: "",
     tags: "",
     description: "",
     link: "",
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
@@ -29,11 +29,11 @@ export default function EditProjet() {
         const data = await res.json();
         setFormData({
           title: data.projet.title || "",
-          image: data.projet.image || "",
           tags: (data.projet.tags || []).join(", "),
           description: data.projet.description || "",
           link: data.projet.link || "",
         });
+        setImagePreview(data.projet.image || null);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -49,30 +49,51 @@ export default function EditProjet() {
     setSuccess(false);
   }
 
+  function handleImageChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file)); // aperçu immédiat avant envoi
+    setSuccess(false);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
     setSaving(true);
 
-    const payload = {
-      ...formData,
-      tags: formData.tags
+    try {
+      // FormData nécessaire pour envoyer un fichier + du texte en même temps
+      const payload = new FormData();
+      payload.append("title", formData.title);
+      payload.append("description", formData.description);
+      payload.append("link", formData.link);
+      formData.tags
         .split(",")
         .map((t) => t.trim())
-        .filter(Boolean),
-    };
+        .filter(Boolean)
+        .forEach((tag) => payload.append("tags", tag));
 
-    try {
+      if (imageFile) {
+        payload.append("image", imageFile);
+      }
+
       const url = `${import.meta.env.VITE_BACK_URL}projets${isEdit ? `/${projetId}` : ""}`;
       const method = isEdit ? "PUT" : "POST";
 
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        credentials: "include",
+        body: payload, // pas de Content-Type manuel : le navigateur le gère avec FormData
       });
 
-      if (!res.ok) throw new Error("Erreur lors de l'enregistrement");
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          navigate("/login");
+          return;
+        }
+        throw new Error("Erreur lors de l'enregistrement");
+      }
       const data = await res.json();
 
       setSuccess(true);
@@ -86,14 +107,6 @@ export default function EditProjet() {
     }
   }
 
-    function handleAvatarChange(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file)); // aperçu immédiat avant envoi
-    setSuccess(false);
-  }
-
   async function handleDelete() {
     if (!confirm("Supprimer ce projet ?")) return;
     setSaving(true);
@@ -101,8 +114,15 @@ export default function EditProjet() {
     try {
       const res = await fetch(`${import.meta.env.VITE_BACK_URL}projets/${projetId}`, {
         method: "DELETE",
+        credentials: "include",
       });
-      if (!res.ok) throw new Error("Erreur lors de la suppression");
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          navigate("/login");
+          return;
+        }
+        throw new Error("Erreur lors de la suppression");
+      }
       navigate("/projets");
     } catch (err) {
       setError(err.message);
@@ -117,7 +137,6 @@ export default function EditProjet() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white">
-        <Navbar />
         <p className="text-center text-gray-500 py-20">Chargement...</p>
       </div>
     );
@@ -136,12 +155,12 @@ export default function EditProjet() {
             </p>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-              {/* Aperçu image */}
+              {/* Image */}
               <div className="flex items-center gap-4">
                 <div className="w-28 h-20 rounded-lg overflow-hidden bg-base-200 ring ring-emerald-500 ring-offset-base-100 ring-offset-2 flex items-center justify-center">
-                  {formData.image ? (
+                  {imagePreview ? (
                     <img
-                      src={formData.image}
+                      src={imagePreview}
                       alt="Aperçu"
                       className="w-full h-full object-cover"
                       onError={(e) => (e.currentTarget.style.display = "none")}
@@ -150,18 +169,18 @@ export default function EditProjet() {
                     <span className="text-xs text-gray-400">Aperçu</span>
                   )}
                 </div>
-                 <div>
-              <label className="btn btn-sm btn-outline">
-                Changer la photo
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarChange}
-                  className="hidden"
-                />
-              </label>
-              <p className="text-xs text-gray-400 mt-1">JPG, PNG — 2 Mo max</p>
-            </div>
+                <div>
+                  <label className="btn btn-sm btn-outline">
+                    Changer la photo
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </label>
+                  <p className="text-xs text-gray-400 mt-1">JPG, PNG — 2 Mo max</p>
+                </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
