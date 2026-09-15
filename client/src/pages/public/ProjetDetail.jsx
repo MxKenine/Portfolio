@@ -33,8 +33,6 @@ export default function ProjetDetail() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
-
       <div className="max-w-3xl mx-auto px-6 py-16">
         <Link
           to="/projets"

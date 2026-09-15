@@ -7,6 +7,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -69,12 +70,27 @@ export default function Login() {
               <label className="label pb-1">
                 <span className="label-text text-gray-600">Mot de passe</span>
               </label>
-              <input
-                type="password"
-                placeholder="Mot de passe..."
-                onChange={(e) => setPassword(e.target.value)}
-                className="input input-bordered w-full bg-white"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Mot de passe..."
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input input-bordered w-full bg-white pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  tabIndex={-1}
+                  aria-label={
+                    showPassword
+                      ? "Masquer le mot de passe"
+                      : "Afficher le mot de passe"
+                  }
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
             <div className="text-right mt-1">
               <a
