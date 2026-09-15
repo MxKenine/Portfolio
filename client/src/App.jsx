@@ -18,6 +18,7 @@ import ExperiencesAdmin from "./pages/admin/ExperiencesAdmin";
 import Editprojet from "./components/admin/Editprojet";
 import EditCompetences from "./components/admin/EditCompetences";
 import EditLangues from "./components/admin/EditLangues";
+import EditExperiences from "./components/admin/EditExperiences";
 
 export function UserNavbar() {
   return (
@@ -50,10 +51,11 @@ export default function App() {
           <Route path="/admin" element={<AdminSideNav />}>
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/profil" element={<ProfilAdmin />} />
-            <Route path="/admin/experiences" element={<ExperiencesAdmin />} />
+            <Route path="/admin/editcv" element={<ExperiencesAdmin />} />
             <Route path="/admin/projets" element={<Editprojet />} />
             <Route path="/admin/competences" element={<EditCompetences />} />
             <Route path="/admin/langues" element={<EditLangues />} />
+            <Route path="/admin/experiences" element={<EditExperiences />} />
           </Route>
         </Routes>
       </BrowserRouter>
