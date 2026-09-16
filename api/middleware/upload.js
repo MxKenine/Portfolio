@@ -13,9 +13,14 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "portfolio", 
     allowed_formats: ["jpg", "jpeg", "png", "webp"],
-    // limite la taille max des images uploadées
     transformation: [{ width: 1600, height: 1600, crop: "limit" }],
   },
 });
 
-export const upload = multer({ storage });
+
+export const upload = multer({
+  storage,
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
+});

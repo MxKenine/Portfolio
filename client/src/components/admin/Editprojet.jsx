@@ -304,7 +304,7 @@ export default function EditProjet() {
                     />
                   </label>
                   <p className="text-xs text-gray-400 mt-1">
-                    JPG, PNG — 2 Mo max
+                    JPG, PNG, JPEG, WEBP — 2 Mo max
                   </p>
                 </div>
               </div>
