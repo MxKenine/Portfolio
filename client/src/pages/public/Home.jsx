@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import defaultAvatar from "../assets/default-avatar.jpeg"; 
+import defaultAvatar from "../../assets/default-avatar.jpeg"; 
 
 export default function HomeHero() {
   return (
