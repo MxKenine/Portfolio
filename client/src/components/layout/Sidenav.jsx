@@ -1,5 +1,12 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, User, Package, Briefcase, Languages, Code2 } from "lucide-react";
+import {
+  LayoutDashboard,
+  User,
+  Package,
+  Briefcase,
+  Languages,
+  Code2,
+} from "lucide-react";
 
 const navItems = [
   { to: "/admin", label: "Tableau de bord", icon: LayoutDashboard },
@@ -19,7 +26,7 @@ export default function AdminSideNav() {
       <aside className="w-64 bg-gray-200 flex flex-col p-4">
         <div className="mb-8 mt-2">
           <Link to="/">
-          <h1 className="text-2xl font-bold text-gray-900">KenineCorp</h1>
+            <h1 className="text-2xl font-bold text-gray-900">KenineCorp</h1>
           </Link>
         </div>
 

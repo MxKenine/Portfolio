@@ -15,7 +15,7 @@ export default function ExperiencesAdmin() {
         credentials: "include",
       });
       if (response.status === 404) {
-        setCv(null); // pas encore de CV → formulaire vide
+        setCv(null);
       } else if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
           navigate("/login");

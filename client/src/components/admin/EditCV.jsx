@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Valeurs par défaut utilisées quand on ajoute une nouvelle entrée
-// (expérience, compétence, langue) au formulaire
-const emptyExperience = { 
+const emptyExperience = {
   title: "",
   company: "",
   startDate: "",
@@ -15,49 +13,42 @@ const emptySkill = { name: "", level: 50 };
 const emptyLanguage = { name: "", level: 1, label: "" };
 
 export default function EditCv({ cv, onCancel, onUpdated }) {
-  // Initialisation du formulaire à partir du CV existant (s'il y en a un),
-  // sinon on part sur des tableaux vides
   const [formData, setFormData] = useState({
     experiences: cv?.experiences?.length ? cv.experiences : [],
     skills: cv?.skills?.length ? cv.skills : [],
     languages: cv?.languages?.length ? cv.languages : [],
   });
   const [error, setError] = useState(null);
-  const [saving, setSaving] = useState(false); // désactive le bouton pendant l'enregistrement
-  const [success, setSuccess] = useState(false); // affiche un message de confirmation après enregistrement
+  const [saving, setSaving] = useState(false);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
-  // Réinitialise le message de succès dès qu'un champ est modifié après un enregistrement
   function markDirty() {
     setSuccess(false);
   }
 
-  // --- Expériences ---
-
-  // Met à jour un champ précis (title, company, ...) d'une expérience à l'index donné
   function updateExperience(index, field, value) {
     const experiences = [...formData.experiences];
     experiences[index] = { ...experiences[index], [field]: value };
     setFormData({ ...formData, experiences });
     markDirty();
   }
-  // Transforme la saisie "React, Node.js" en tableau ["React", "Node.js"]
-  // et met à jour le champ tags de l'expérience concernée
+
   function updateExperienceTags(index, value) {
     const tags = value
       .split(",")
       .map((t) => t.trim())
-      .filter(Boolean); // retire les entrées vides (ex: virgule en trop)
+      .filter(Boolean);
     updateExperience(index, "tags", tags);
   }
-  // Ajoute une nouvelle expérience vide au formulaire
+
   function addExperience() {
     setFormData({
       ...formData,
       experiences: [...formData.experiences, { ...emptyExperience }],
     });
   }
-  // Supprime l'expérience à l'index donné
+
   function removeExperience(index) {
     setFormData({
       ...formData,
@@ -65,10 +56,6 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
     });
   }
 
-  // --- Compétences ---
-
-  // Met à jour un champ (name ou level) d'une compétence à l'index donné
-  // Le niveau est converti en Number car il vient d'un <input type="range">
   function updateSkill(index, field, value) {
     const skills = [...formData.skills];
     skills[index] = {
@@ -78,14 +65,14 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
     setFormData({ ...formData, skills });
     markDirty();
   }
-  // Ajoute une nouvelle compétence vide (niveau par défaut 50%)
+
   function addSkill() {
     setFormData({
       ...formData,
       skills: [...formData.skills, { ...emptySkill }],
     });
   }
-  // Supprime la compétence à l'index donné
+
   function removeSkill(index) {
     setFormData({
       ...formData,
@@ -93,9 +80,6 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
     });
   }
 
-  // --- Langues ---
-
-  // Met à jour un champ (name, level ou label) d'une langue à l'index donné
   function updateLanguage(index, field, value) {
     const languages = [...formData.languages];
     languages[index] = {
@@ -105,14 +89,14 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
     setFormData({ ...formData, languages });
     markDirty();
   }
-  // Ajoute une nouvelle langue vide au formulaire
+
   function addLanguage() {
     setFormData({
       ...formData,
       languages: [...formData.languages, { ...emptyLanguage }],
     });
   }
-  // Supprime la langue à l'index donné
+
   function removeLanguage(index) {
     setFormData({
       ...formData,
@@ -120,7 +104,6 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
     });
   }
 
-  // Soumission du formulaire : envoie l'ensemble du CV au backend en une seule requête PATCH
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
@@ -129,12 +112,11 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
       const payload = { ...formData };
       const response = await fetch(`${import.meta.env.VITE_BACK_URL}cv/me`, {
         method: "PATCH",
-        credentials: "include", // envoie le cookie de session (JWT)
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
       if (!response.ok) {
-        // Session invalide ou expirée → redirection vers la connexion
         if (response.status === 401 || response.status === 403) {
           navigate("/login");
           return;
@@ -142,7 +124,6 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
         throw new Error("Échec de la mise à jour du CV");
       }
       const data = await response.json();
-      // Remonte le CV mis à jour au composant parent (ex: pour rafraîchir l'affichage)
       onUpdated(data.cv);
       setSuccess(true);
     } catch (err) {
@@ -161,7 +142,6 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-          {/* Expériences */}
           <section>
             <h3 className="font-semibold text-lg mb-3">Expériences</h3>
             <div className="flex flex-col gap-4">
@@ -170,8 +150,6 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
                   key={i}
                   className="border border-base-300 rounded-lg p-4 flex flex-col gap-3 relative"
                 >
-              
-
                   <div className="grid sm:grid-cols-2 gap-3">
                     <input
                       placeholder="Intitulé du poste"
@@ -217,16 +195,15 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
                     rows={3}
                   />
 
-                  
                   <div className="flex justify-end pt-1">
-      <button
-        type="button"
-        onClick={() => removeExperience(i)}
-        className="btn btn-error btn-outline btn-sm"
-      >
-        Supprimer cette expérience
-      </button>
-    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeExperience(i)}
+                      className="btn btn-error btn-outline btn-sm"
+                    >
+                      Supprimer cette expérience
+                    </button>
+                  </div>
                 </div>
               ))}
               <button
@@ -241,7 +218,6 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
 
           <div className="divider m-0" />
 
-          {/* Compétences */}
           <section>
             <h3 className="font-semibold text-lg mb-3">Compétences</h3>
             <div className="flex flex-col gap-3">
@@ -253,7 +229,6 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
                     onChange={(e) => updateSkill(i, "name", e.target.value)}
                     className="input input-bordered w-40 shrink-0"
                   />
-                  {/* Niveau de compétence en pourcentage (0-100) */}
                   <input
                     type="range"
                     min="0"
@@ -287,7 +262,6 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
 
           <div className="divider m-0" />
 
-          {/* Langues */}
           <section>
             <h3 className="font-semibold text-lg mb-3">Langues</h3>
             <div className="flex flex-col gap-3">
@@ -296,28 +270,21 @@ export default function EditCv({ cv, onCancel, onUpdated }) {
                   <input
                     placeholder="Nom"
                     value={lang.name}
-                    onChange={(e) =>
-                      updateLanguage(i, "name", e.target.value)
-                    }
+                    onChange={(e) => updateLanguage(i, "name", e.target.value)}
                     className="input input-bordered w-32 shrink-0"
                   />
                   <input
                     placeholder="ex: Langue maternelle, Niveau B2"
                     value={lang.label}
-                    onChange={(e) =>
-                      updateLanguage(i, "label", e.target.value)
-                    }
+                    onChange={(e) => updateLanguage(i, "label", e.target.value)}
                     className="input input-bordered flex-1 min-w-40"
                   />
-                  {/* Niveau de langue sur une échelle de 0 à 6 */}
                   <input
                     type="range"
                     min="0"
                     max="6"
                     value={lang.level}
-                    onChange={(e) =>
-                      updateLanguage(i, "level", e.target.value)
-                    }
+                    onChange={(e) => updateLanguage(i, "level", e.target.value)}
                     className="range range-sm range-success w-32 shrink-0"
                   />
                   <span className="text-sm w-10 text-right shrink-0">

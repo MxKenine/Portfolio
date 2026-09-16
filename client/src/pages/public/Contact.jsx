@@ -36,9 +36,11 @@ export default function Contact() {
   }
 
   return (
-    <section data-theme="light" className=" min-h-full bg-white py-20 px-6 md:px-12">
+    <section
+      data-theme="light"
+      className=" min-h-full bg-white py-20 px-6 md:px-12"
+    >
       <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
-        {/* Colonne gauche */}
         <div>
           <h2 className="text-4xl font-medium text-gray-900 leading-tight">
             Travaillons
@@ -73,8 +75,6 @@ export default function Contact() {
             </div>
           </div>
         </div>
-
-        {/* Colonne droite : formulaire */}
         <form
           onSubmit={handleSubmit}
           className="border border-gray-200 rounded-lg p-6 bg-gray-50 space-y-5"

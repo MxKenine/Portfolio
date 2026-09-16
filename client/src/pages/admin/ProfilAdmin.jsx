@@ -10,10 +10,13 @@ export default function ProfilAdmin() {
 
   async function getProfil() {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACK_URL}admin/profil`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACK_URL}admin/profil`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
           navigate("/login");

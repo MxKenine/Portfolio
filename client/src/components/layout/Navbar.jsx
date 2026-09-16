@@ -22,23 +22,23 @@ export default function Navbar() {
 
   return (
     <header className="bg-gray-100 px-6 md:px-12 py-5">
-      {/* Ligne principale */}
       <div className="grid grid-cols-2 md:grid-cols-3 items-center">
-        {/* Logo */}
         <span className="text-xl font-semibold text-gray-900 justify-self-start">
           KenineCorp
         </span>
 
-        {/* Nav desktop, caché en mobile */}
         <nav className="hidden md:flex items-center justify-center gap-8 text-gray-700">
           {links.map((link) => (
-            <Link key={link.path} to={link.path} className={getLinkClass(link.path)}>
+            <Link
+              key={link.path}
+              to={link.path}
+              className={getLinkClass(link.path)}
+            >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        {/* Bouton CV, caché en mobile */}
         <a
           href="/cv.pdf"
           download
@@ -47,7 +47,6 @@ export default function Navbar() {
           Télécharger CV
         </a>
 
-        {/* Bouton burger, visible seulement en mobile */}
         <button
           className="md:hidden justify-self-end"
           onClick={() => setIsOpen(!isOpen)}
@@ -79,7 +78,6 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Menu mobile déroulant */}
       {isOpen && (
         <nav className="md:hidden flex flex-col gap-4 mt-4 text-gray-700">
           {links.map((link) => (

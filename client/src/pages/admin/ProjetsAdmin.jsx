@@ -8,16 +8,19 @@ export default function getProjets() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  async function getProjet() {
+  async function getProjets() {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACK_URL}admin/projets`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACK_URL}admin/projets`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
           navigate("/login");
-          return;   
+          return;
         }
         throw new Error("Impossible de récupérer les projets");
       }

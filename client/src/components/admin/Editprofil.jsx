@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 export default function EditProfil({ user, onCancel, onUpdated }) {
   const [formData, setFormData] = useState({
     firstname: user.firstname || "",
@@ -12,9 +11,7 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
     age: user.age || "",
   });
   const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(
-    user.avatar ? `${import.meta.env.VITE_BACK_URL}${user.avatar}` : null
-  );
+  const [avatarPreview, setAvatarPreview] = useState(user.avatar || null);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -29,7 +26,7 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
     const file = e.target.files[0];
     if (!file) return;
     setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file)); // aperçu immédiat avant envoi
+    setAvatarPreview(URL.createObjectURL(file));
     setSuccess(false);
   }
 
@@ -38,7 +35,6 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
     setError(null);
     setSaving(true);
     try {
-      // FormData nécessaire pour envoyer un fichier + du texte en même temps
       const payload = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         payload.append(key, value);
@@ -47,11 +43,14 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
         payload.append("avatar", avatarFile);
       }
 
-      const response = await fetch(`${import.meta.env.VITE_BACK_URL}admin/profil`, {
-        method: "PATCH",
-        credentials: "include",
-        body: payload, // pas de Content-Type manuel : le navigateur le gère avec FormData
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACK_URL}admin/profil`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          body: payload,
+        },
+      );
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
           navigate("/login");

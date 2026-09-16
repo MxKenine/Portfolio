@@ -27,10 +27,7 @@ export default function Admin() {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Tableau de bord</h2>
-      {user && (
-        <p>Bienvenue, {user.firstname || user.email} 👋</p>
-      )}
-      {/* Ici tu peux ajouter des stats: nb de projets, nb d'expériences, etc. */}
+      {user && <p>Bienvenue, {user.firstname || user.email} 👋</p>}
     </div>
   );
 }

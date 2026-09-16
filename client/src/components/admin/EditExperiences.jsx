@@ -30,7 +30,7 @@ export default function EditExperiences({ onCancel, onUpdated }) {
             return;
           }
           if (response.status === 404) {
-            setExperiences([]); // pas encore de CV créé
+            setExperiences([]);
             return;
           }
           throw new Error("Erreur lors du chargement du CV");
@@ -137,19 +137,25 @@ export default function EditExperiences({ onCancel, onUpdated }) {
                 <input
                   placeholder="Entreprise"
                   value={exp.company}
-                  onChange={(e) => updateExperience(i, "company", e.target.value)}
+                  onChange={(e) =>
+                    updateExperience(i, "company", e.target.value)
+                  }
                   className="input input-bordered w-full"
                 />
                 <input
                   placeholder="Début (ex: 2024)"
                   value={exp.startDate}
-                  onChange={(e) => updateExperience(i, "startDate", e.target.value)}
+                  onChange={(e) =>
+                    updateExperience(i, "startDate", e.target.value)
+                  }
                   className="input input-bordered w-full"
                 />
                 <input
                   placeholder="Fin (ex: Actuellement)"
                   value={exp.endDate}
-                  onChange={(e) => updateExperience(i, "endDate", e.target.value)}
+                  onChange={(e) =>
+                    updateExperience(i, "endDate", e.target.value)
+                  }
                   className="input input-bordered w-full"
                 />
               </div>
@@ -157,7 +163,9 @@ export default function EditExperiences({ onCancel, onUpdated }) {
               <textarea
                 placeholder="Description"
                 value={exp.description}
-                onChange={(e) => updateExperience(i, "description", e.target.value)}
+                onChange={(e) =>
+                  updateExperience(i, "description", e.target.value)
+                }
                 className="textarea textarea-bordered w-full"
                 rows={3}
               />
@@ -203,7 +211,11 @@ export default function EditExperiences({ onCancel, onUpdated }) {
 
           <div className="flex justify-end gap-3 pt-2 border-t border-base-200">
             {onCancel && (
-              <button type="button" onClick={onCancel} className="btn btn-ghost">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="btn btn-ghost"
+              >
                 Annuler
               </button>
             )}

@@ -162,7 +162,11 @@ export default function EditCompetences({ onCancel, onUpdated }) {
 
           <div className="flex justify-end gap-3 pt-2 border-t border-base-200">
             {onCancel && (
-              <button type="button" onClick={onCancel} className="btn btn-ghost">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="btn btn-ghost"
+              >
                 Annuler
               </button>
             )}

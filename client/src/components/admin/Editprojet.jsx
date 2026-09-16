@@ -12,15 +12,13 @@ const emptyForm = {
 export default function EditProjet() {
   const navigate = useNavigate();
 
-  // --- Liste des projets ---
   const [projets, setProjets] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
   const [listError, setListError] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
 
-  // --- Formulaire (création ou édition) ---
-  const [view, setView] = useState("list"); // "list" | "form"
-  const [editingId, setEditingId] = useState(null); // id du projet en cours d'édition, null = création
+  const [view, setView] = useState("list");
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -264,7 +262,6 @@ export default function EditProjet() {
     );
   }
 
-  // --- Vue formulaire (création ou édition) ---
   const isEdit = Boolean(editingId);
 
   return (
@@ -306,7 +303,9 @@ export default function EditProjet() {
                       className="hidden"
                     />
                   </label>
-                  <p className="text-xs text-gray-400 mt-1">JPG, PNG — 2 Mo max</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    JPG, PNG — 2 Mo max
+                  </p>
                 </div>
               </div>
 
@@ -393,7 +392,11 @@ export default function EditProjet() {
                 )}
 
                 <div className="flex gap-3">
-                  <button type="button" onClick={backToList} className="btn btn-ghost">
+                  <button
+                    type="button"
+                    onClick={backToList}
+                    className="btn btn-ghost"
+                  >
                     Annuler
                   </button>
                   <button
