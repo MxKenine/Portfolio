@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/layout/Navbar";
 
 const emptyForm = {
   title: "",
@@ -163,8 +162,6 @@ export default function EditProjet() {
   if (view === "list") {
     return (
       <div className="min-h-screen bg-white">
-        <Navbar />
-
         <div className="max-w-5xl mx-auto px-6 py-16">
           <div className="flex items-center justify-between mb-10">
             <div>
