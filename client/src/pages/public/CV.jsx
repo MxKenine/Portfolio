@@ -61,7 +61,6 @@ export default function CV() {
     <main data-theme="light" className="bg-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
         <article className="border border-blue-300 rounded-lg overflow-hidden">
-          {/* Bandeau profil */}
           <header className="bg-gray-200 px-5 sm:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 items-center md:items-center text-center md:text-left">
             <img
               src={user.avatar || "/default-avatar.jpeg"}
