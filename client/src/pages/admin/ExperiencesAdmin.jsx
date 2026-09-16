@@ -41,13 +41,15 @@ export default function ExperiencesAdmin() {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-6">
+    <div>
       <h2 className="text-xl font-bold mb-4">Mes expériences</h2>
-      <EditCv
-        cv={cv}
-        onCancel={() => navigate("/admin")}
-        onUpdated={(updatedCv) => setCv(updatedCv)}
-      />
+      <div className="min-h-screen flex items-center justify-center bg-white px-6">
+        <EditCv
+          cv={cv}
+          onCancel={() => navigate("/admin")}
+          onUpdated={(updatedCv) => setCv(updatedCv)}
+        />
+      </div>
     </div>
   );
 }

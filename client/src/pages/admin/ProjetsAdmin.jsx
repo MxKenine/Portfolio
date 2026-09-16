@@ -45,12 +45,12 @@ export default function getProjets() {
     <div>
       <h2 className="text-xl font-bold mb-4">Mes projets</h2>
       <div className="min-h-screen flex items-center justify-center bg-white px-6">
-      <Editprojet
-        user={user}
-        onCancel={() => navigate("/admin")}
-        onUpdated={(updatedUser) => setUser(updatedUser)}
+        <Editprojet
+          user={user}
+          onCancel={() => navigate("/admin")}
+          onUpdated={(updatedUser) => setUser(updatedUser)}
         />
-        </div>
+      </div>
     </div>
   );
 }
