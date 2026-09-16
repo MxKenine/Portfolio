@@ -10,9 +10,6 @@ export default function Navbar() {
     { label: "CV", path: "/cv" },
     { label: "Projets", path: "/projets" },
     { label: "Contact", path: "/contact" },
-    { label: "Register", path: "/register" },
-    { label: "Login", path: "/login" },
-    { label: "Dashboard", path: "/admin" },
   ];
 
   const getLinkClass = (path) =>

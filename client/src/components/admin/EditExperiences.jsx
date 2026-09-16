@@ -183,7 +183,7 @@ export default function EditExperiences({ onCancel, onUpdated }) {
                   onClick={() => removeExperience(i)}
                   className="btn btn-error btn-outline btn-sm"
                 >
-                  Supprimer cette expérience
+                  Supprimer
                 </button>
               </div>
             </div>

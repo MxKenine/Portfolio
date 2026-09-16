@@ -160,7 +160,6 @@ export default function EditProjet() {
     }
   }
 
-  // --- Vue liste ---
   if (view === "list") {
     return (
       <div className="min-h-screen bg-white">
@@ -173,7 +172,7 @@ export default function EditProjet() {
                 Gestion des projets
               </h1>
               <p className="text-gray-600">
-                Ajoute, modifie ou supprime tes réalisations.
+                Ajout, modification ou suppression des projets.
               </p>
             </div>
             <button
@@ -266,8 +265,6 @@ export default function EditProjet() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
-
       <div className="max-w-2xl mx-auto px-6 py-16">
         <div className="card bg-base-100 shadow-md">
           <div className="card-body">

@@ -15,7 +15,6 @@ const navItems = [
   { to: "/admin/projets", label: "Projets", icon: Package },
   { to: "/admin/competences", label: "Compétences", icon: Code2 },
   { to: "/admin/langues", label: "Langues", icon: Languages },
-  { to: "/admin/editcv", label: "CV", icon: Package },
 ];
 
 export default function AdminSideNav() {
