@@ -161,7 +161,7 @@ export default function EditProjet() {
 
   if (view === "list") {
     return (
-      <div className="min-h-screen bg-white">
+      <div className=" bg-white">
         <div className="max-w-5xl mx-auto px-6 py-16">
           <div className="flex items-center justify-between mb-10">
             <div>

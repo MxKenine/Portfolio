@@ -44,7 +44,7 @@ export default function ProfilAdmin() {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Mon profil</h2>
-      <div className="min-h-screen flex items-center justify-center bg-white px-6">
+      <div className="flex items-center justify-center bg-white px-6">
         <EditProfil
           user={user}
           onCancel={() => navigate("/admin")}
