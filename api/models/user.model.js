@@ -6,20 +6,25 @@ const userSchema = new mongoose.Schema(
       type: String,
       require: true,
       unique: true,
+      lowercase: true,
+      trim: true,
     },
     password: {
       type: String,
       required: true,
       minLenght: 8,
+      trim: true,
     },
     token: {
       type: String,
       required: true,
+      trim: true,
     },
     role: {
       type: String,
       enum: ["user", "admin"],
       required: true,
+      trim: true,
     },
     isActive: {
       type: Boolean,
