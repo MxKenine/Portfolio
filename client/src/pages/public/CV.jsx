@@ -64,8 +64,8 @@ export default function CV() {
           {/* Bandeau profil */}
           <header className="bg-gray-200 px-5 sm:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 items-center md:items-center text-center md:text-left">
             <img
-              src={user.avatar || "/default-avatar.png"}
-              alt={`Photo de profil de ${user.firstname} ${user.lastname}`}
+              src={user.avatar || "/default-avatar.jpeg"}
+              alt="Photo de profil"
               className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shrink-0"
             />
 

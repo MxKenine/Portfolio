@@ -7,8 +7,8 @@ export default function HomeHero() {
         <div className="grid md:grid-cols-2 gap-10 md:gap-12 items-center">
           <div className="flex justify-center md:justify-end order-1 md:order-2">
             <img
-              src={user?.avatar || "/default-avatar.png"}
-              alt="Avatar"
+              src={user?.avatar || "/default-avatar.jpeg"}
+              alt="Photo de profil"
               className="w-48 h-48 md:w-72 md:h-72 rounded-full object-cover shadow-lg"
             />
           </div>
