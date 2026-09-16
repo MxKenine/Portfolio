@@ -77,7 +77,6 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          {/* Avatar */}
           <div className="flex items-center gap-4">
             <div className="avatar">
               <div className="w-20 h-20 rounded-full ring ring-emerald-500 ring-offset-base-100 ring-offset-2">
@@ -100,7 +99,7 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
                   className="hidden"
                 />
               </label>
-              <p className="text-xs text-gray-400 mt-1">JPG, PNG — 2 Mo max</p>
+              <p className="text-xs text-gray-400 mt-1">JPG, PNG, JPEG, WEBP — 2 Mo max</p>
             </div>
           </div>
 
@@ -114,7 +113,7 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
                 value={formData.firstname}
                 onChange={handleChange}
                 className="input input-bordered w-full"
-                placeholder="Quentin"
+                placeholder="Prénom"
               />
             </div>
 
@@ -127,7 +126,7 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
                 value={formData.lastname}
                 onChange={handleChange}
                 className="input input-bordered w-full"
-                placeholder="Duprey"
+                placeholder="Nom"
               />
             </div>
 
@@ -154,7 +153,7 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
                 value={formData.phone}
                 onChange={handleChange}
                 className="input input-bordered w-full"
-                placeholder="06 12 34 56 78"
+                placeholder="Num. Tél."
               />
             </div>
 
@@ -180,7 +179,7 @@ export default function EditProfil({ user, onCancel, onUpdated }) {
                 value={formData.where}
                 onChange={handleChange}
                 className="input input-bordered w-full"
-                placeholder="Toulouse, France"
+                placeholder="Lieux"
               />
             </div>
           </div>
