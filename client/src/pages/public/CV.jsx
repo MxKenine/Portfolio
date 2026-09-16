@@ -33,8 +33,11 @@ export default function CV() {
   async function revealContact() {
     setLoadingContact(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACK_URL}cv/public/contact`);
-      if (!response.ok) throw new Error("Impossible de récupérer les coordonnées");
+      const response = await fetch(
+        `${import.meta.env.VITE_BACK_URL}cv/public/contact`,
+      );
+      if (!response.ok)
+        throw new Error("Impossible de récupérer les coordonnées");
       const data = await response.json();
       setRevealed(data);
     } catch (err) {
@@ -61,11 +64,7 @@ export default function CV() {
           {/* Bandeau profil */}
           <header className="bg-gray-200 px-5 sm:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 items-center md:items-center text-center md:text-left">
             <img
-              src={
-                user.avatar
-                  ? `${import.meta.env.VITE_BACK_URL}${user.avatar}`
-                  : `${import.meta.env.VITE_BACK_URL}uploads/1788435999097.jpeg`
-              }
+              src={user.avatar || "/default-avatar.png"}
               alt={`Photo de profil de ${user.firstname} ${user.lastname}`}
               className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shrink-0"
             />
@@ -81,7 +80,10 @@ export default function CV() {
                     {revealed.email && (
                       <span className="flex items-center gap-1.5">
                         <Mail size={14} aria-hidden="true" />
-                        <a href={`mailto:${revealed.email}`} className="break-all">
+                        <a
+                          href={`mailto:${revealed.email}`}
+                          className="break-all"
+                        >
                           {revealed.email}
                         </a>
                       </span>
@@ -100,7 +102,9 @@ export default function CV() {
                     disabled={loadingContact}
                     className="text-emerald-700 underline text-sm cursor-pointer"
                   >
-                    {loadingContact ? "Chargement..." : "Afficher les coordonnées"}
+                    {loadingContact
+                      ? "Chargement..."
+                      : "Afficher les coordonnées"}
                   </button>
                 )}
 
@@ -172,7 +176,10 @@ export default function CV() {
 
             {/* Compétences + Langues */}
             <div className="border-t md:border-t-0 md:border-l border-blue-200 bg-gray-50">
-              <section aria-labelledby="skills-heading" className="px-5 sm:px-6 py-6">
+              <section
+                aria-labelledby="skills-heading"
+                className="px-5 sm:px-6 py-6"
+              >
                 <h2
                   id="skills-heading"
                   className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-5"
@@ -183,9 +190,7 @@ export default function CV() {
                 <ul className="space-y-4">
                   {cv.skills?.map((skill, i) => (
                     <li key={i}>
-                      <p className="text-sm text-gray-800 mb-1">
-                        {skill.name}
-                      </p>
+                      <p className="text-sm text-gray-800 mb-1">{skill.name}</p>
                       <div
                         className="w-full h-2 bg-gray-200 rounded-full overflow-hidden"
                         role="progressbar"
