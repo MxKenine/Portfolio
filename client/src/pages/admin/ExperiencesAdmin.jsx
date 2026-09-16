@@ -41,7 +41,7 @@ export default function ExperiencesAdmin() {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div>
+    <div className="min-h-screen flex items-center justify-center bg-white px-6">
       <h2 className="text-xl font-bold mb-4">Mes expériences</h2>
       <EditCv
         cv={cv}

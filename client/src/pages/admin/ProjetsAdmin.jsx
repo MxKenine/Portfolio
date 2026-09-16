@@ -42,7 +42,7 @@ export default function getProjets() {
   if (!user) return <p>Aucun projet trouvé</p>;
 
   return (
-    <div>
+    <div className="min-h-screen flex items-center justify-center bg-white px-6">
       <h2 className="text-xl font-bold mb-4">Mes projets</h2>
       <Editprojet
         user={user}

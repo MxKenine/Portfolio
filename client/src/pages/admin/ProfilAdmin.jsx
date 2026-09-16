@@ -42,7 +42,7 @@ export default function ProfilAdmin() {
   if (!user) return <p>Aucun profil trouvé</p>;
 
   return (
-    <div>
+    <div className="min-h-screen flex items-center justify-center bg-white px-6">
       <h2 className="text-xl font-bold mb-4">Mon profil</h2>
       <EditProfil
         user={user}
