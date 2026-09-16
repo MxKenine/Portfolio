@@ -1,13 +1,13 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, User, Package, Briefcase } from "lucide-react";
+import { LayoutDashboard, User, Package, Briefcase, Languages, Code2 } from "lucide-react";
 
 const navItems = [
   { to: "/admin", label: "Tableau de bord", icon: LayoutDashboard },
   { to: "/admin/profil", label: "Profil", icon: User },
   { to: "/admin/experiences", label: "Experiences", icon: Briefcase },
   { to: "/admin/projets", label: "Projets", icon: Package },
-  { to: "/admin/competences", label: "Compétences", icon: Package },
-  { to: "/admin/langues", label: "Langues", icon: Package },
+  { to: "/admin/competences", label: "Compétences", icon: Code2 },
+  { to: "/admin/langues", label: "Langues", icon: Languages },
   { to: "/admin/editcv", label: "CV", icon: Package },
 ];
 
