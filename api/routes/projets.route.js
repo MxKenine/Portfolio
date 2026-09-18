@@ -6,7 +6,7 @@ import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 
-// GET /projets → liste publique de tous les projets
+// GET /projets  liste publique de tous les projets
 router.get("/projets", async (req, res) => {
   try {
     const projets = await Projet.find({});
@@ -16,7 +16,7 @@ router.get("/projets", async (req, res) => {
   }
 });
 
-// GET /projets/:id → détail public d'un projet précis
+// GET /projets/:id détail public d'un projet précis
 router.get("/projets/:id", async (req, res) => {
   try {
     const projet = await Projet.findById(req.params.id);
@@ -67,13 +67,8 @@ router.post(
   }
 );
 
-// PUT /projets/:id → modifier un projet (admin uniquement)
-router.put(
-  "/projets/:id",
-  verifyToken,
-  verifyRole("admin"),
-  upload.single("image"),
-  async (req, res) => {
+// PUT /projets/:id  modifier un projet (admin uniquement)
+router.put("/projets/:id", verifyToken, verifyRole("admin"), upload.single("image"), async (req, res) => {
     try {
       const { title, description, link } = req.body;
       const tags = req.body.tags
@@ -99,7 +94,7 @@ router.put(
   }
 );
 
-// DELETE /projets/:id → supprimer un projet (admin uniquement)
+// DELETE /projets/:id  supprimer un projet (admin uniquement)
 router.delete("/projets/:id", verifyToken, verifyRole("admin"), async (req, res) => {
   try {
     const projet = await Projet.findByIdAndDelete(req.params.id);

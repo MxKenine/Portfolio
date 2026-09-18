@@ -1,4 +1,3 @@
-// projet.model.js
 import mongoose from "mongoose";
 
 const projetSchema = new mongoose.Schema({

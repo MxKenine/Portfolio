@@ -14,7 +14,6 @@ const router = express.Router();
 router.post("/register", upload.single("avatar"), async (req, res) => {
   try {
     const { email, password, firstname, lastname, phone, age, where } = req.body;
- // const = destructuration
     if (!email || !password) {
       return res.status(400).json({ message: "Veuillez remplir les champs" });
     }
